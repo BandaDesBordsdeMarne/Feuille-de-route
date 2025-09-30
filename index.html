@@ -1,65 +1,68 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Banda des Bords de Marne — Quiz</title>
-  <style>
-    :root{--banda:#c8102e;--bg:#111;--panel:#222;--btnhover:#a00f23}
-    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#fff;display:flex;flex-direction:column;min-height:100vh}
-    #top-message{background:#000;padding:28px 20px;text-align:center;font-size:1.6rem;line-height:1.3;color:var(--banda)}
-    #top-message .answer{color:#fff;display:block;margin-top:8px;font-weight:700;font-size:1.9rem}
-    #joke-container{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:12px;text-align:center}
-    .question{color:var(--banda);font-size:2.0rem;font-weight:700;margin-bottom:10px;white-space:pre-line}
-    .answer{color:#fff;font-size:1.25rem;white-space:pre-line}
-    #buttons-container{background:#000;padding:15px 12px 30px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;border-top:1px solid var(--banda)}
-    button{background:var(--banda);border:none;border-radius:8px;padding:12px 18px;color:#fff;font-weight:700;cursor:pointer;font-size:1rem;transition:background .2s,transform .06s}
-    button:hover{background:var(--btnhover)} button:active{transform:translateY(1px)}
-    .playlist-wrap{text-align:center;margin:18px 0}
-    iframe.playlist{border-radius:8px}
-    #quiz-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;padding:18px;box-sizing:border-box;overflow:auto}
-    .quiz-box{max-width:720px;margin:28px auto;background:var(--panel);border-radius:12px;padding:18px}
-    .quiz-box h2{color:var(--banda);margin:0 0 12px}
-    .quiz-q{font-weight:700;margin-bottom:10px}
-    .quiz-opt{margin:8px 0}
-    .quiz-result{margin-top:12px;font-weight:700}
-    @media (max-width:520px){ .question{font-size:1.6rem} button{padding:10px 12px;font-size:.95rem} .quiz-box{margin:12px} }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Banda des Bords de Marne — Quiz</title>
+<style>
+  :root{--banda:#c8102e;--bg:#111;--panel:#222;--btnhover:#a00f23;}
+  html,body{height:100%;margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#fff;display:flex;flex-direction:column;min-height:100vh;}
+  #top-message{background:#000;padding:28px 20px;text-align:center;font-size:1.6rem;line-height:1.3;color:var(--banda);}
+  #top-message .answer{color:#fff;display:block;margin-top:8px;font-weight:700;font-size:1.9rem;}
+  #joke-container{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:12px;text-align:center;}
+  .question{color:var(--banda);font-size:2rem;font-weight:700;margin-bottom:10px;white-space:pre-line;}
+  .answer{color:#fff;font-size:1.25rem;white-space:pre-line;}
+  #buttons-container{background:#000;padding:15px 12px 30px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;border-top:1px solid var(--banda);}
+  button{background:var(--banda);border:none;border-radius:8px;padding:12px 18px;color:#fff;font-weight:700;cursor:pointer;font-size:1rem;transition:background .2s,transform .06s;}
+  button:hover{background:var(--btnhover);}
+  button:active{transform:translateY(1px);}
+  .playlist-wrap{text-align:center;margin:18px 0;}
+  iframe.playlist{border-radius:8px;}
+  #quiz-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;padding:18px;box-sizing:border-box;overflow:auto;}
+  .quiz-box{max-width:720px;margin:28px auto;background:var(--panel);border-radius:12px;padding:18px;color:#fff;}
+  .quiz-box h2{color:var(--banda);margin:0 0 12px;}
+  .quiz-q{font-weight:700;margin-bottom:10px;color:var(--banda);}
+  .quiz-opt{margin:6px 0;cursor:pointer;padding:8px 12px;background:var(--banda);border-radius:6px;color:#fff;display:block;transition:background .2s;}
+  .quiz-opt:hover{background:#a00f23;}
+  .quiz-result{margin-top:12px;font-weight:700;color:#fff;}
+  @media(max-width:520px){.question{font-size:1.6rem}button{padding:10px 12px;font-size:.95rem}.quiz-box{margin:12px}}
+</style>
 </head>
 <body>
 
-  <div id="top-message">
-    Désolé pas encore de feuille de route ! Les infos arrivent toujours en retard... comme<br/>
-    <span class="answer" id="late-answer">les Trombones</span>
-  </div>
+<div id="top-message">
+  Désolé pas encore de feuille de route ! Les infos arrivent toujours en retard... comme<br/>
+  <span class="answer" id="late-answer">les Trombones</span>
+</div>
 
-  <div id="joke-container">
-    <div class="question" id="joke-question">Comment un jazz man fait-il pour devenir millionnaire ?</div>
-    <div class="answer" id="joke-answer">il commence milliardaire !</div>
-  </div>
+<div id="joke-container">
+  <div class="question" id="joke-question">Comment un jazz man fait-il pour devenir millionnaire ?</div>
+  <div class="answer" id="joke-answer">il commence milliardaire !</div>
+</div>
 
-  <div class="playlist-wrap">
-    <h2 style="color:var(--banda);margin:0 0 10px">📻 La Banda FM</h2>
-    <iframe id="banda-fm" class="playlist" width="320" height="180" src="" title="Playlist Banda" frameborder="0" allowfullscreen></iframe>
-  </div>
+<div class="playlist-wrap">
+  <h2 style="color:var(--banda);margin:0 0 10px">📻 La Banda FM</h2>
+  <iframe id="banda-fm" class="playlist" width="320" height="180" src="" title="Playlist Banda" frameborder="0" allowfullscreen></iframe>
+</div>
 
-  <div id="buttons-container">
-    <button id="quiz-button">🎭 Quel musicien es-tu ?</button>
-    <button id="back-button">Retour à l’espace musiciens</button>
-    <button id="new-joke-button">Encore une blague</button>
-    <button id="play-game-button">Jouons ensemble</button>
-  </div>
+<div id="buttons-container">
+  <button id="quiz-button">🎭 Quel musicien es-tu ?</button>
+  <button id="back-button">Retour à l’espace musiciens</button>
+  <button id="new-joke-button">Encore une blague</button>
+  <button id="play-game-button">Jouons ensemble</button>
+</div>
 
-  <!-- Quiz modal -->
-  <div id="quiz-modal" aria-hidden="true">
-    <div class="quiz-box" role="dialog" aria-modal="true" aria-labelledby="quiz-title">
-      <h2 id="quiz-title">🎭 Quel musicien es-tu ?</h2>
-      <div id="quiz-content"></div>
-      <div style="text-align:right;margin-top:14px">
-        <button id="quiz-close">Fermer</button>
-      </div>
+<!-- Quiz modal -->
+<div id="quiz-modal" aria-hidden="true">
+  <div class="quiz-box" role="dialog" aria-modal="true" aria-labelledby="quiz-title">
+    <h2 id="quiz-title">🎭 Quel musicien es-tu ?</h2>
+    <div id="quiz-content"></div>
+    <div style="text-align:right;margin-top:14px">
+      <button id="quiz-close">Fermer</button>
     </div>
   </div>
+</div>
 
 <script>
 /* ===== Données ===== */
@@ -125,7 +128,7 @@ const quizQuestions = [
   }
 ];
 
-/* ===== Utilitaires ===== */
+/* ===== Fonctions utilitaires ===== */
 function randomFromArray(a){ return a[Math.floor(Math.random()*a.length)]; }
 
 const lateAnswerEl = document.getElementById("late-answer");
@@ -135,7 +138,7 @@ const bandaFm = document.getElementById('banda-fm');
 
 function loadRandomSong(){
   const index = Math.floor(Math.random()*10);
-  bandaFm.src = `https://www.youtube.com/embed/videoseries?list=${playlistId}&index=${index}&autoplay=0`;
+  bandaFm.src = `https://www.youtube.com/embed/videoseries?list=${playlistId}&index=${index}&autoplay=1`;
 }
 
 function updateContent(){
@@ -146,7 +149,7 @@ function updateContent(){
   loadRandomSong();
 }
 
-/* ===== Quiz Logic ===== */
+/* ===== Quiz ===== */
 const quizModal = document.getElementById('quiz-modal');
 const quizContent = document.getElementById('quiz-content');
 const quizButton = document.getElementById('quiz-button');
@@ -156,6 +159,7 @@ function openQuiz(){
   let index = 0;
   const scores = {};
   instruments.forEach(i=>scores[i]=0);
+  
   function showQuestion(){
     if(index>=quizQuestions.length){
       // résultat
@@ -167,12 +171,12 @@ function openQuiz(){
     const q = quizQuestions[index];
     let html = `<div class="quiz-q">${q.q}</div>`;
     q.options.forEach((opt,i)=>{
-      html+=`<div class="quiz-opt"><button data-i="${i}">${opt.text}</button></div>`;
+      html+=`<div class="quiz-opt" data-i="${i}">${opt.text}</div>`;
     });
     quizContent.innerHTML = html;
-    quizContent.querySelectorAll('button').forEach(btn=>{
-      btn.addEventListener('click',e=>{
-        const i = parseInt(e.currentTarget.dataset.i);
+    quizContent.querySelectorAll('.quiz-opt').forEach(opt=>{
+      opt.addEventListener('click',e=>{
+        const i = parseInt(opt.dataset.i);
         const instr = q.options[i].instrument;
         scores[instr]++;
         index++;

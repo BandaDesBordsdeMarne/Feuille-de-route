@@ -12,25 +12,17 @@
     #joke-container{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:12px;text-align:center}
     .question{color:var(--banda);font-size:2.0rem;font-weight:700;margin-bottom:10px;white-space:pre-line}
     .answer{color:#fff;font-size:1.25rem;white-space:pre-line}
-    #radio-player{display:none}
     #buttons-container{background:#000;padding:15px 12px 30px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;border-top:1px solid var(--banda)}
     button{background:var(--banda);border:none;border-radius:8px;padding:12px 18px;color:#fff;font-weight:700;cursor:pointer;font-size:1rem;transition:background .2s,transform .06s}
     button:hover{background:var(--btnhover)} button:active{transform:translateY(1px)}
-    /* playlist block */
     .playlist-wrap{text-align:center;margin:18px 0}
     iframe.playlist{border-radius:8px}
-    /* modal quiz */
     #quiz-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;padding:18px;box-sizing:border-box;overflow:auto}
     .quiz-box{max-width:720px;margin:28px auto;background:var(--panel);border-radius:12px;padding:18px}
     .quiz-box h2{color:var(--banda);margin:0 0 12px}
     .quiz-q{font-weight:700;margin-bottom:10px}
     .quiz-opt{margin:8px 0}
     .quiz-result{margin-top:12px;font-weight:700}
-    .small{font-size:.9rem;opacity:.9}
-    /* toast */
-    #toast{position:fixed;left:50%;transform:translateX(-50%) translateY(24px);bottom:18px;background:#111;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.06);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:10000}
-    #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    /* responsive */
     @media (max-width:520px){ .question{font-size:1.6rem} button{padding:10px 12px;font-size:.95rem} .quiz-box{margin:12px} }
   </style>
 </head>
@@ -52,7 +44,6 @@
   </div>
 
   <div id="buttons-container">
-    <button id="sound-button">🔊 Joue un instrument</button>
     <button id="quiz-button">🎭 Quel musicien es-tu ?</button>
     <button id="back-button">Retour à l’espace musiciens</button>
     <button id="new-joke-button">Encore une blague</button>
@@ -70,11 +61,9 @@
     </div>
   </div>
 
-  <div id="toast" aria-hidden="true"></div>
-
 <script>
-/* ========= Données ========== */
-const playlistId = "PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9"; // playlist YouTube
+/* ===== Données ===== */
+const playlistId = "PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9";
 const lateAnswers = ["Vanessa","Le nouveau gouvernement","Léo","Rémi","Angèle","Garance","Nataél","Léandre","Louise","le carnet 2","les Lopez","les Ducournau","les Trinquant","La Thomann Family","les Percussion et leur tempo :D ....","la SNCF"];
 const jokes = [
   { question: "Comment un jazz man fait-il pour devenir millionnaire ?", answer: "il commence milliardaire !" },
@@ -85,8 +74,6 @@ const jokes = [
   { question: "Comment faire cuire un poisson avec son Eupho ?", answer: "Mettez-le dans le pavillon et jouez Do Ré La Sol" }
 ];
 const games = ["https://elgoog.im/dino/","https://musiclab.chromeexperiments.com/","https://www.incredibox.com/demo/"];
-
-/* Instruments list + descriptions (ta version "originale" pour clarinette etc.) */
 const instruments = ["trompette","trombone","clarinette","percu","chef","saxophone","flute"];
 const instrumentDescriptions = {
   trompette: "🎺 Trompette : Toujours plus fort, toujours plus haut. Tu te crois la star du show (et parfois tu l’es). Ton pire ennemi ? Le bouton de volume.",
@@ -98,7 +85,7 @@ const instrumentDescriptions = {
   flute: "🎵 Flûte : Tu joues discrètement, presque trop… jusqu’au moment où tu balances un aigu strident qui réveille tout le quartier."
 };
 
-/* Quiz questions (options text NE MENTIONNENT PAS les instruments) */
+/* Quiz questions */
 const quizQuestions = [
   {
     q: "En répétition, tu es plutôt...",
@@ -135,54 +122,22 @@ const quizQuestions = [
       { text: "En train d’improviser un long solo jazzy.", instrument: "saxophone" },
       { text: "En train de souffler un peu loin des projecteurs.", instrument: "flute" }
     ]
-  },
-  {
-    q: "Ton pire défaut (d’après les autres) ?",
-    options: [
-      { text: "Trop show-off, toujours.", instrument: "trompette" },
-      { text: "Trop relax, parfois trop tard.", instrument: "trombone" },
-      { text: "Trop sérieux·se, parfois coincé·e.", instrument: "clarinette" },
-      { text: "Trop énergique, t’en fais trop.", instrument: "percu" },
-      { text: "Trop directif·ve, tu veux tout contrôler.", instrument: "chef" },
-      { text: "Trop charmeur·se, tu abuses des solos.", instrument: "saxophone" },
-      { text: "Trop discret·e, on t’oublie parfois.", instrument: "flute" }
-    ]
-  },
-  {
-    q: "Ton rêve secret sur scène ?",
-    options: [
-      { text: "Un solo de folie sous les projecteurs.", instrument: "trompette" },
-      { text: "Devenir la star de l’after en 3 accords.", instrument: "trombone" },
-      { text: "Jouer un passage parfait sans faute.", instrument: "clarinette" },
-      { text: "Un solo de batterie qui claque 20 minutes.", instrument: "percu" },
-      { text: "Diriger un concert énorme pour ta ville.", instrument: "chef" },
-      { text: "Un solo suave qui arrête tout le monde.", instrument: "saxophone" },
-      { text: "Un moment aérien où tout vibre parfaitement.", instrument: "flute" }
-    ]
   }
 ];
 
-/* ========= Utilitaires UI ========= */
-const bandaFm = document.getElementById('banda-fm');
-const lateAnswerEl = document.getElementById('late-answer');
-const jokeQuestionEl = document.getElementById('joke-question');
-const jokeAnswerEl = document.getElementById('joke-answer');
-const toastEl = document.getElementById('toast');
-
+/* ===== Utilitaires ===== */
 function randomFromArray(a){ return a[Math.floor(Math.random()*a.length)]; }
-function showToast(txt, ms=1300){
-  toastEl.textContent = txt; toastEl.classList.add('show'); toastEl.setAttribute('aria-hidden','false');
-  clearTimeout(toastEl._t); toastEl._t = setTimeout(()=>{ toastEl.classList.remove('show'); toastEl.setAttribute('aria-hidden','true'); }, ms);
-}
 
-/* load random song from playlist by index */
+const lateAnswerEl = document.getElementById("late-answer");
+const jokeQuestionEl = document.getElementById("joke-question");
+const jokeAnswerEl = document.getElementById("joke-answer");
+const bandaFm = document.getElementById('banda-fm');
+
 function loadRandomSong(){
-  // Choose an index from 0..9 to avoid going out of bounds; YouTube will handle it.
   const index = Math.floor(Math.random()*10);
   bandaFm.src = `https://www.youtube.com/embed/videoseries?list=${playlistId}&index=${index}&autoplay=0`;
 }
 
-/* update jokes + random playlist */
 function updateContent(){
   lateAnswerEl.textContent = randomFromArray(lateAnswers);
   const j = randomFromArray(jokes);
@@ -191,126 +146,7 @@ function updateContent(){
   loadRandomSong();
 }
 
-/* ========= WebAudio : bouton Joue un instrument (synthé simple) ========= */
-let audioCtx = null;
-function getAudioCtx(){ if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); return audioCtx; }
-
-async function playSynthFor(instr){
-  const ctx = getAudioCtx();
-  if(ctx.state === 'suspended') await ctx.resume();
-  const now = ctx.currentTime;
-
-  function stopAfter(node, t){ try{ node.stop && node.stop(t); }catch(e){} }
-
-  // small wrappers
-  if(instr === 'trombone'){
-    // long glissando cliché
-    const osc = ctx.createOscillator();
-    const g = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(700, now);
-    osc.frequency.linearRampToValueAtTime(180, now + 0.9);
-    osc.frequency.exponentialRampToValueAtTime(210, now + 1.12);
-    g.gain.setValueAtTime(0.0001, now);
-    g.gain.exponentialRampToValueAtTime(0.9, now + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
-    osc.connect(g).connect(ctx.destination);
-    osc.start(now); stopAfter(osc, now + 1.25);
-    showToast('🔊 Trombone (glissando)'); return;
-  }
-  if(instr === 'trompette'){
-    const osc = ctx.createOscillator(), lfo = ctx.createOscillator();
-    const lfoGain = ctx.createGain(), g = ctx.createGain(), bpf = ctx.createBiquadFilter();
-    osc.type = 'square'; bpf.type='bandpass'; bpf.frequency.value = 1500; bpf.Q.value = 6;
-    lfo.type='sine'; lfo.frequency.value = 6; lfoGain.gain.value = 10;
-    lfo.connect(lfoGain); lfoGain.connect(osc.frequency);
-    osc.connect(bpf).connect(g).connect(ctx.destination);
-    g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(0.95, now + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
-    osc.frequency.setValueAtTime(880, now);
-    osc.start(now); osc.stop(now + 0.75); lfo.start(now); lfo.stop(now + 0.75);
-    showToast('🔊 Trompette');
-    return;
-  }
-  if(instr === 'clarinette'){
-    const osc = ctx.createOscillator(), g = ctx.createGain();
-    osc.type='square';
-    const noise = ctx.createBufferSource();
-    const buff = ctx.createBuffer(1, ctx.sampleRate*0.25, ctx.sampleRate);
-    const data = buff.getChannelData(0);
-    for(let i=0;i<data.length;i++) data[i] = (Math.random()*2-1)*0.02;
-    noise.buffer = buff; const nf = ctx.createBiquadFilter(); nf.type='lowpass'; nf.frequency.value=1200;
-    noise.connect(nf).connect(g);
-    osc.connect(g).connect(ctx.destination);
-    g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(0.7, now + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.95);
-    osc.frequency.setValueAtTime(600, now);
-    osc.start(now); osc.stop(now + 1.0); noise.start(now); noise.stop(now + 1.0);
-    showToast('🔊 Clarinette (sensible)');
-    return;
-  }
-  if(instr === 'percu'){
-    const noise = ctx.createBufferSource();
-    const length = ctx.sampleRate * 0.8;
-    const buff = ctx.createBuffer(1, length, ctx.sampleRate);
-    const d = buff.getChannelData(0);
-    for(let i=0;i<d.length;i++) d[i] = (Math.random()*2-1)*(1 - i/length);
-    noise.buffer = buff;
-    const low = ctx.createBiquadFilter(); low.type='lowpass'; low.frequency.value = 1200;
-    const g = ctx.createGain();
-    noise.connect(low).connect(g).connect(ctx.destination);
-    g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(1.0, now + 0.005); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
-    noise.start(now); noise.stop(now + 0.8);
-    showToast('🔊 Percu (gros coup)');
-    return;
-  }
-  if(instr === 'chef'){
-    const o1 = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain();
-    o1.type='sawtooth'; o2.type='sine';
-    o1.frequency.setValueAtTime(440, now); o2.frequency.setValueAtTime(660, now);
-    o1.connect(g); o2.connect(g); g.connect(ctx.destination);
-    g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(0.9, now + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.65);
-    o1.start(now); o2.start(now); o1.stop(now + 0.7); o2.stop(now + 0.7);
-    showToast('🔊 Chef (ta-daa!)'); return;
-  }
-  if(instr === 'saxophone'){
-    const osc = ctx.createOscillator(), lfo = ctx.createOscillator(), lfoG = ctx.createGain(), g = ctx.createGain();
-    osc.type='sawtooth'; lfo.type='sine'; lfo.frequency.value = 5; lfoG.gain.value = 8;
-    lfo.connect(lfoG); lfoG.connect(osc.frequency);
-    osc.connect(g).connect(ctx.destination);
-    g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(0.9, now + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, now + 1.05);
-    osc.frequency.setValueAtTime(350, now);
-    osc.start(now); osc.stop(now + 1.05); lfo.start(now); lfo.stop(now + 1.05);
-    showToast('🔊 Saxophone (suave)');
-    return;
-  }
-  if(instr === 'flute'){
-    const osc = ctx.createOscillator(), g = ctx.createGain();
-    const noise = ctx.createBufferSource();
-    const b = ctx.createBuffer(1, ctx.sampleRate*0.5, ctx.sampleRate);
-    const dd = b.getChannelData(0);
-    for(let i=0;i<dd.length;i++) dd[i] = (Math.random()*2-1)*0.008*(1 - i/dd.length);
-    noise.buffer = b; const nf = ctx.createBiquadFilter(); nf.type='lowpass'; nf.frequency.value=2000;
-    noise.connect(nf).connect(g);
-    osc.type='sine'; osc.connect(g).connect(ctx.destination);
-    g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(0.7, now + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, now + 1.12);
-    osc.frequency.setValueAtTime(900, now);
-    osc.start(now); osc.stop(now + 1.12); noise.start(now); noise.stop(now + 1.12);
-    showToast('🔊 Flûte (aérien)');
-    return;
-  }
-}
-
-/* When user clicks the bottom "Joue un instrument" button => play a random instrument with synth */
-document.getElementById('sound-button').addEventListener('click', async ()=>{
-  const inst = randomFromArray(instruments);
-  try{
-    await playSynthFor(inst);
-  }catch(e){
-    console.warn('Audio error', e);
-    showToast('🔇 Impossible de jouer le son');
-  }
-});
-
-/* ========= Quiz UI & logic ========= */
+/* ===== Quiz Logic ===== */
 const quizModal = document.getElementById('quiz-modal');
 const quizContent = document.getElementById('quiz-content');
 const quizButton = document.getElementById('quiz-button');
@@ -320,95 +156,45 @@ function openQuiz(){
   let index = 0;
   const scores = {};
   instruments.forEach(i=>scores[i]=0);
-
-  function renderQuestion(){
+  function showQuestion(){
+    if(index>=quizQuestions.length){
+      // résultat
+      let maxInstrument = instruments[0];
+      instruments.forEach(i=>{ if(scores[i]>scores[maxInstrument]) maxInstrument=i });
+      quizContent.innerHTML=`<div class="quiz-result">${instrumentDescriptions[maxInstrument]}</div>`;
+      return;
+    }
     const q = quizQuestions[index];
-    quizContent.innerHTML = `<div class="quiz-q">${q.q}</div><div id="opts"></div><div style="text-align:right;margin-top:12px"><button id="prev" ${index===0?'style="visibility:hidden"':''}>Précédent</button><button id="next" style="margin-left:8px">${index<quizQuestions.length-1?'Suivant':'Voir le résultat'}</button></div><div id="quiz-msg" class="quiz-result"></div>`;
-    const opts = document.getElementById('opts');
+    let html = `<div class="quiz-q">${q.q}</div>`;
     q.options.forEach((opt,i)=>{
-      const id = `q${index}_opt${i}`;
-      const wrapper = document.createElement('div'); wrapper.className='quiz-opt';
-      wrapper.innerHTML = `<label style="cursor:pointer"><input type="radio" name="q${index}" id="${id}" value="${opt.instrument}"> ${opt.text}</label>`;
-      opts.appendChild(wrapper);
+      html+=`<div class="quiz-opt"><button data-i="${i}">${opt.text}</button></div>`;
     });
-
-    // restore previously checked if stored in data attribute
-    const saved = quizContent.dataset[`ans${index}`];
-    if(saved){
-      const el = document.querySelector(`input[name="q${index}"][value="${saved}"]`);
-      if(el) el.checked = true;
-    }
-
-    document.getElementById('prev').addEventListener('click', ()=>{
-      // save selection
-      const sel = document.querySelector(`input[name="q${index}"]:checked`);
-      if(sel) quizContent.dataset[`ans${index}`] = sel.value;
-      if(index>0){ index--; renderQuestion(); }
-    });
-
-    document.getElementById('next').addEventListener('click', ()=>{
-      const sel = document.querySelector(`input[name="q${index}"]:checked`);
-      const msg = document.getElementById('quiz-msg');
-      if(!sel){ msg.textContent = "👉 Choisis une option pour continuer !"; return; }
-      msg.textContent = "";
-      // store and increment score
-      quizContent.dataset[`ans${index}`] = sel.value;
-      scores[sel.value] = (scores[sel.value]||0) + 1;
-      index++;
-      if(index < quizQuestions.length) renderQuestion();
-      else showResult();
+    quizContent.innerHTML = html;
+    quizContent.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        const i = parseInt(e.currentTarget.dataset.i);
+        const instr = q.options[i].instrument;
+        scores[instr]++;
+        index++;
+        showQuestion();
+      });
     });
   }
-
-  function showResult(){
-    // compute top(s)
-    const entries = Object.entries(scores);
-    let max = Math.max(...entries.map(e=>e[1]));
-    if(!isFinite(max) || max === 0){
-      // if somehow all zero (shouldn't happen), choose random
-      const pick = randomFromArray(instruments);
-      displayResultFor(pick); return;
-    }
-    const top = entries.filter(e=>e[1] === max).map(e=>e[0]);
-    const winner = randomFromArray(top); // tie -> random among top
-    displayResultFor(winner);
-  }
-
-  function displayResultFor(inst){
-    quizContent.innerHTML = `<div><h3>🥳 Résultat</h3><div style="font-weight:700;line-height:1.4">${instrumentDescriptions[inst]}</div></div><div style="margin-top:12px;text-align:right"><button id="quiz-retry">Rejouer</button></div>`;
-    document.getElementById('quiz-retry').addEventListener('click', ()=>{
-      // clear stored answers
-      Object.keys(quizContent.dataset).forEach(k=>{ if(k.startsWith('ans')) delete quizContent.dataset[k]; });
-      openQuiz();
-    });
-  }
-
   quizModal.style.display='block';
-  quizModal.setAttribute('aria-hidden','false');
-  renderQuestion();
+  showQuestion();
 }
+quizButton.addEventListener('click',openQuiz);
+quizClose.addEventListener('click',()=>quizModal.style.display='none');
 
-quizButton.addEventListener('click', openQuiz);
-quizClose.addEventListener('click', ()=>{
-  quizModal.style.display='none';
-  quizContent.innerHTML = '';
-  quizModal.setAttribute('aria-hidden','true');
-});
-quizModal.addEventListener('click', (e)=>{ if(e.target === quizModal){ quizModal.style.display='none'; quizContent.innerHTML=''; quizModal.setAttribute('aria-hidden','true'); }});
-document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && quizModal.style.display === 'block'){ quizModal.style.display='none'; quizContent.innerHTML=''; quizModal.setAttribute('aria-hidden','true'); }});
+/* ===== Autres boutons ===== */
+document.getElementById("back-button").addEventListener("click",()=>window.location.href="https://sites.google.com/bandadesbordsdemarne.com/public/espace-membres/infos-presta");
+document.getElementById("new-joke-button").addEventListener("click",updateContent);
+document.getElementById("play-game-button").addEventListener("click",()=>window.open(randomFromArray(games),"_blank"));
 
-/* ========= Other buttons ========= */
-document.getElementById('play-game-button').addEventListener('click', ()=>{ window.open(randomFromArray(games),'_blank'); });
-document.getElementById('back-button').addEventListener('click', ()=>{ window.location.href = "https://sites.google.com/bandadesbordsdemarne.com/public/espace-membres/infos-presta"; });
-
-/* When clicking "Encore une blague" -> update joke and change playlist */
-document.getElementById('new-joke-button').addEventListener('click', updateContent);
-
-/* Init on load */
-updateContent(); // sets joke + loads random playlist
-
+/* ===== Initialisation ===== */
+updateContent();
 </script>
+
 </body>
 </html>
-
 

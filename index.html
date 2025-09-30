@@ -63,97 +63,80 @@ iframe.playlist{border-radius:8px;}
   </div>
 </div>
 
+<!-- Sad Trombone audio -->
+<audio id="sad-trombone" src="sad-trombone.mp3" preload="auto"></audio>
+
 <script>
 /* ===== Données ===== */
-let bandaFm = document.getElementById('banda-fm');
-const playlistId = "PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9";
+let bandaFm=document.getElementById('banda-fm');
+const playlistId="PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9";
 
-const lateAnswers = ["Vanessa","Le nouveau gouvernement","Léo","Rémi","Angèle","Garance","Nataél","Léandre","Louise","le carnet 2","les Lopez","les Ducournau","les Trinquant","La Thomann Family","les Percussion et leur tempo :D ....","la SNCF"];
+const lateAnswers=["Vanessa","Le nouveau gouvernement","Léo","Rémi","Angèle","Garance","Nataél","Léandre","Louise","le carnet 2","les Lopez","les Ducournau","les Trinquant","La Thomann Family","les Percussion et leur tempo :D ....","la SNCF"];
 
-const jokes = [
-  { question: "Comment un jazz man fait-il pour devenir millionnaire ?", answer: "il commence milliardaire !" },
-  { question: "Quel est le point commun entre les Beatles et les Percus de la Banda ?", answer: "Cela fait plus de 40 ans qu’ils ne jouent plus ensemble !" },
-  { question: "Qu'est-ce qu'un demie ton en Banda ?", answer: "Deux Flûtes qui jouent à l'unisson <3" },
-  { question: "Le chef en répétition : - Trombone 2 tu joues trop fort !!!", answer: "Les autres : Il n'est pas là .... - Vous lui direz quand il reviendra !" },
-  { question: "Pourquoi les Souba sont toujours en retard ?", answer: "Parce qu’ils suivent leur propre tempo" },
-  { question: "Comment faire cuire un poisson avec son Eupho ?", answer: "Mettez-le dans le pavillon et jouez Do Ré La Sol" }
+const jokes=[
+  {question:"Comment un jazz man fait-il pour devenir millionnaire ?",answer:"il commence milliardaire !"},
+  {question:"Quel est le point commun entre les Beatles et les Percus de la Banda ?",answer:"Cela fait plus de 40 ans qu’ils ne jouent plus ensemble !"},
+  {question:"Qu'est-ce qu'un demie ton en Banda ?",answer:"Deux Flûtes qui jouent à l'unisson <3"},
+  {question:"Le chef en répétition : - Trombone 2 tu joues trop fort !!!",answer:"Les autres : Il n'est pas là .... - Vous lui direz quand il reviendra !"},
+  {question:"Pourquoi les Souba sont toujours en retard ?",answer:"Parce qu’ils suivent leur propre tempo"},
+  {question:"Comment faire cuire un poisson avec son Eupho ?",answer:"Mettez-le dans le pavillon et jouez Do Ré La Sol"}
 ];
 
-const games = ["https://elgoog.im/dino/","https://musiclab.chromeexperiments.com/","https://www.incredibox.com/demo/"];
+const games=["https://elgoog.im/dino/","https://musiclab.chromeexperiments.com/","https://www.incredibox.com/demo/"];
 
-const instruments = ["trompette","trombone","clarinette","percu","chef","saxophone","flute"];
-const instrumentDescriptions = {
-  trompette: "🎺 Trompette : Toujours plus fort, toujours plus haut. Tu te crois la star du show (et parfois tu l’es). Ton pire ennemi ? Le bouton de volume.",
-  trombone: "📎 Trombone : Tu glisses partout, dans la musique comme au bar. Tu es imprévisible, mais c’est ce qui fait ton charme (enfin… parfois).",
-  clarinette: "🎶 Clarinette : Tu bosses sérieusement… mais tu lâches des canards mémorables. Entre rigueur et fou rire tu es unique.",
-  percu: "🥁 Percu : Tu cognes sur tout, tout le temps. Pour toi, une table, un gobelet ou une casserole c’est déjà un instrument. Ton voisin de chambre te déteste.",
-  chef: "🧑‍🎤 Chef : Tu n’as pas d’instrument… mais tu as les bras. Et tu penses que ça suffit pour diriger tout ce petit monde (même si personne ne te regarde vraiment).",
-  saxophone: "🎷 Saxophone : Tu improvises toujours, même sur ‘Au Clair de la Lune’. Tu crois être irrésistible, mais en vrai on attend juste que tu termines ton solo de 15 minutes.",
-  flute: "🎵 Flûte : Tu joues discrètement, presque trop… jusqu’au moment où tu balances un aigu strident qui réveille tout le quartier."
+const instruments=["trompette","trombone","clarinette","percu","chef","saxophone","flute"];
+const instrumentDescriptions={
+  trompette:"🎺 Trompette : Toujours plus fort, toujours plus haut. Tu te crois la star du show (et parfois tu l’es). Ton pire ennemi ? Le bouton de volume.",
+  trombone:"📎 Trombone : Tu glisses partout, dans la musique comme au bar. Tu es imprévisible, mais c’est ce qui fait ton charme (enfin… parfois).",
+  clarinette:"🎶 Clarinette : Tu bosses sérieusement… mais tu lâches des canards mémorables. Entre rigueur et fou rire tu es unique !",
+  percu:"🥁 Percu : Tu cognes sur tout, tout le temps. Pour toi, une table, un gobelet ou une casserole c’est déjà un instrument. Ton voisin de chambre te déteste.",
+  chef:"🧑‍🎤 Chef : Tu n’as pas d’instrument… mais tu as les bras. Et tu penses que ça suffit pour diriger tout ce petit monde (même si personne ne te regarde vraiment).",
+  saxophone:"🎷 Saxophone : Tu improvises toujours, même sur ‘Au Clair de la Lune’. Tu crois être irrésistible, mais en vrai on attend juste que tu termines ton solo de 15 minutes.",
+  flute:"🎵 Flûte : Tu joues discrètement, presque trop… jusqu’au moment où tu balances un aigu strident qui réveille tout le quartier."
 };
 
 /* ===== Quiz questions ===== */
-const quizQuestions = [
-  {
-    q:"En répétition, tu es plutôt...",
-    options:[
-      {text:"Je me place devant et j’y vais à fond.", instrument:"trompette"},
-      {text:"J’arrive relax, je plaisante, je détends l’ambiance.", instrument:"trombone"},
-      {text:"Je révise mes doigtés dans mon coin, sérieusement.", instrument:"clarinette"},
-      {text:"Je crée du rythme partout — même sur la table.", instrument:"percu"},
-      {text:"J’organise et je supervise la structure.", instrument:"chef"},
-      {text:"Je cherche le groove et j’improvise.", instrument:"saxophone"},
-      {text:"Je m’échauffe doucement et je me concentre.", instrument:"flute"}
-    ]
-  },
-  {
-    q:"Ton accessoire indispensable avant de monter sur scène ?",
-    options:[
-      {text:"Un petit rituel pour être au top.", instrument:"trompette"},
-      {text:"Un trait d’humour et une bière.", instrument:"trombone"},
-      {text:"Mes partitions annotées, proprement rangées.", instrument:"clarinette"},
-      {text:"Des baguettes et une de secours.", instrument:"percu"},
-      {text:"Mon planning du set et mon chronomètre.", instrument:"chef"},
-      {text:"Un souffle profond et une posture cool.", instrument:"saxophone"},
-      {text:"Un échauffement discret et un souffle contrôlé.", instrument:"flute"}
-    ]
-  },
-  {
-    q:"Si on te cherche pendant une prestation, tu es probablement...",
-    options:[
-      {text:"Devant en train de chercher le buzz.", instrument:"trompette"},
-      {text:"Au bar à raconter des anecdotes.", instrument:"trombone"},
-      {text:"Dans un coin à corriger un détail technique.", instrument:"clarinette"},
-      {text:"En train de taper un rythme improvisé sur tout.", instrument:"percu"},
-      {text:"En train de coordonner la suite du set.", instrument:"chef"},
-      {text:"En train d’improviser un long solo jazzy.", instrument:"saxophone"},
-      {text:"En train de souffler un peu loin des projecteurs.", instrument:"flute"}
-    ]
-  },
-  {
-    q:"Si tu étais en retard à la répétition, que dirais-tu ?",
-    options:[
-      {text:"Je suis arrivé à l’heure… enfin, presque", instrument:"trompette"},
-      {text:"Désolé, j’ai dû m’arrêter pour rigoler un peu", instrument:"trombone"},
-      {text:"J’ai suivi mes notes à la lettre… mais lentement", instrument:"clarinette"},
-      {text:"J’ai frappé sur tout ce que j’ai trouvé pour rester motivé", instrument:"percu"},
-      {text:"Je vérifie que tout est prêt pour les autres", instrument:"chef"},
-      {text:"J’ai improvisé le chemin pour arriver", instrument:"saxophone"},
-      {text:"Je me suis échauffé tranquillement avant de venir", instrument:"flute"}
-    ]
-  },
-  {
-    q:"Comment tu te comportes pendant un solo des autres ?",
-    options:[
-      {text:"Je les encourage et je fais un clin d’œil", instrument:"trompette"},
-      {text:"Je commente discrètement et je ris un peu", instrument:"trombone"},
-      {text:"J’observe et note tous les détails", instrument:"clarinette"},
-      {text:"Je tape le rythme avec tout ce que j’ai sous la main", instrument:"percu"},
-      {text:"Je surveille que tout reste bien synchronisé", instrument:"chef"},
-      {text:"Je me lance dans un petit contrepoint improvisé", instrument:"saxophone"},
-      {text:"Je souffle doucement et profite du son", instrument:"flute"}
-    ]
-  }
+const quizQuestions=[
+{q:"En répétition, tu es plutôt...",options:[
+{text:"Je me place devant et j’y vais à fond.",instrument:"trompette"},
+{text:"J’arrive relax, je plaisante, je détends l’ambiance.",instrument:"trombone"},
+{text:"Je révise mes doigtés dans mon coin, sérieusement.",instrument:"clarinette"},
+{text:"Je crée du rythme partout — même sur la table.",instrument:"percu"},
+{text:"J’organise et je supervise la structure.",instrument:"chef"},
+{text:"Je cherche le groove et j’improvise.",instrument:"saxophone"},
+{text:"Je m’échauffe doucement et je me concentre.",instrument:"flute"}]},
+{q:"Ton accessoire indispensable avant de monter sur scène ?",options:[
+{text:"Un petit rituel pour être au top.",instrument:"trompette"},
+{text:"Un trait d’humour et une bière.",instrument:"trombone"},
+{text:"Mes partitions annotées, proprement rangées.",instrument:"clarinette"},
+{text:"Des baguettes et une de secours.",instrument:"percu"},
+{text:"Mon planning du set et mon chronomètre.",instrument:"chef"},
+{text:"Un souffle profond et une posture cool.",instrument:"saxophone"},
+{text:"Un échauffement discret et un souffle contrôlé.",instrument:"flute"}]},
+{q:"Si on te cherche pendant une prestation, tu es probablement...",options:[
+{text:"Devant en train de chercher le buzz.",instrument:"trompette"},
+{text:"Au bar à raconter des anecdotes.",instrument:"trombone"},
+{text:"Dans un coin à corriger un détail technique.",instrument:"clarinette"},
+{text:"En train de taper un rythme improvisé sur tout.",instrument:"percu"},
+{text:"En train de coordonner la suite du set.",instrument:"chef"},
+{text:"En train d’improviser un long solo jazzy.",instrument:"saxophone"},
+{text:"En train de souffler un peu loin des projecteurs.",instrument:"flute"}]},
+{q:"Si tu étais en retard à la répétition, que dirais-tu ?",options:[
+{text:"Je suis arrivé à l’heure… enfin, presque",instrument:"trompette"},
+{text:"Désolé, j’ai dû m’arrêter pour rigoler un peu",instrument:"trombone"},
+{text:"J’ai suivi mes notes à la lettre… mais lentement",instrument:"clarinette"},
+{text:"J’ai frappé sur tout ce que j’ai trouvé pour rester motivé",instrument:"percu"},
+{text:"Je vérifie que tout est prêt pour les autres",instrument:"chef"},
+{text:"J’ai improvisé le chemin pour arriver",instrument:"saxophone"},
+{text:"Je me suis échauffé tranquillement avant de venir",instrument:"flute"}]},
+{q:"Comment tu te comportes pendant un solo des autres ?",options:[
+{text:"Je les encourage et je fais un clin d’œil",instrument:"trompette"},
+{text:"Je commente discrètement et je ris un peu",instrument:"trombone"},
+{text:"J’observe et note tous les détails",instrument:"clarinette"},
+{text:"Je tape le rythme avec tout ce que j’ai sous la main",instrument:"percu"},
+{text:"Je surveille que tout reste bien synchronisé",instrument:"chef"},
+{text:"Je me lance dans un petit contrepoint improvisé",instrument:"saxophone"},
+{text:"Je souffle doucement et profite du son",instrument:"flute"}]}
 ];
 
 /* ===== Fonctions utilitaires ===== */
@@ -162,7 +145,7 @@ function shuffleArray(array){for(let i=array.length-1;i>0;i--){const j=Math.floo
 
 /* ===== Playlist ===== */
 function loadRandomSong(){
-  const index = Math.floor(Math.random()*10);
+  const index=Math.floor(Math.random()*10);
   bandaFm.outerHTML=`<iframe id="banda-fm" class="playlist" width="320" height="180" src="https://www.youtube.com/embed/videoseries?list=${playlistId}&index=${index}&autoplay=1" title="Playlist Banda" frameborder="0" allowfullscreen></iframe>`;
   bandaFm=document.getElementById('banda-fm');
 }
@@ -196,6 +179,11 @@ function openQuiz(){
       let maxInstrument=instruments[0];
       instruments.forEach(i=>{if(scores[i]>scores[maxInstrument])maxInstrument=i});
       quizContent.innerHTML=`<div class="quiz-result">${instrumentDescriptions[maxInstrument]}</div>`;
+
+      // Jouer le Sad Trombone
+      const audio=document.getElementById('sad-trombone');
+      audio.currentTime=0;
+      audio.play().catch(e=>console.log("Lecture bloquée:",e));
       return;
     }
     const q=quizQuestions[index];

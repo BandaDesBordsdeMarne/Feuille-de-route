@@ -15,14 +15,16 @@
       justify-content: space-between;
       min-height: 100vh;
     }
+
     #top-message {
       background-color: #000;
       padding: 30px 20px 25px;
       text-align: center;
       font-size: 1.8rem;
       line-height: 1.4;
-      color: #c8102e;
+      color: #c8102e; /* Rouge Banda */
     }
+
     #top-message .answer {
       color: white;
       display: block;
@@ -30,6 +32,7 @@
       font-weight: bold;
       font-size: 2rem;
     }
+
     #joke-container {
       flex-grow: 1;
       display: flex;
@@ -39,6 +42,7 @@
       text-align: center;
       padding: 0 20px;
     }
+
     #joke-container .question {
       color: #c8102e;
       font-size: 2.2rem;
@@ -46,11 +50,13 @@
       margin-bottom: 12px;
       white-space: pre-line;
     }
+
     #joke-container .answer {
       color: white;
       font-size: 1.8rem;
       white-space: pre-line;
     }
+
     #buttons-container {
       background-color: #000;
       padding: 15px 10px 30px;
@@ -60,6 +66,7 @@
       gap: 15px;
       border-top: 1px solid #c8102e;
     }
+
     button {
       background-color: #c8102e;
       border: none;
@@ -69,44 +76,16 @@
       padding: 12px 20px;
       cursor: pointer;
       font-size: 1rem;
-      transition: background-color 0.3s ease, transform 0.08s ease;
+      white-space: nowrap;
+      transition: background-color 0.3s ease;
     }
-    button:hover { background-color: #a00f23; }
-    button:active { transform: translateY(1px); }
-    #quiz-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #000000dd;
-      color: white;
-      padding: 20px;
-      box-sizing: border-box;
-      z-index: 9999;
-      overflow: auto;
+
+    button:hover {
+      background-color: #a00f23;
     }
-    .quiz-inner {
-      max-width: 520px;
-      margin: 40px auto;
-      background: #222;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    .quiz-inner h2 { color: #c8102e; margin-top: 0; }
-    .quiz-result { margin-top: 12px; font-weight: bold; }
   </style>
 </head>
 <body>
-  <!-- Modal quiz -->
-  <div id="quiz-modal">
-    <div class="quiz-inner">
-      <h2>🎭 Quel musicien es-tu ?</h2>
-      <div id="quiz-content"></div>
-      <div style="text-align:right; margin-top:20px;">
-        <button id="quiz-close-btn">Fermer</button>
-      </div>
-    </div>
-  </div>
 
   <div id="top-message">
     Désolé pas encore de feuille de route ! Les infos arrivent toujours en retard... comme<br/>
@@ -118,11 +97,9 @@
     <div class="answer" id="joke-answer">il commence milliardaire !</div>
   </div>
 
-  <!-- Playlist -->
   <div style="text-align:center; margin: 30px 0;">
     <h2 style="color:#c8102e;">📻 La Banda FM</h2>
-    <iframe class="playlist" width="300" height="169"
-      src="https://www.youtube.com/embed/videoseries?list=PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9"
+    <iframe id="banda-fm" width="300" height="169" src="" 
       title="Playlist Banda" frameborder="0" allowfullscreen></iframe>
   </div>
 
@@ -134,165 +111,163 @@
     <button id="play-game-button">Jouons ensemble</button>
   </div>
 
-  <script>
-    /* Sons clichés */
-    const instrumentSounds = {
-      trompette: "https://freesound.org/data/previews/441/441695_5665277-lq.mp3",
-      trombone: "https://freesound.org/data/previews/341/341695_3248244-lq.mp3", // wah-wah trombone
-      clarinette: "https://freesound.org/data/previews/147/147613_2615118-lq.mp3", // couac
-      percu: "https://freesound.org/data/previews/66/66717_634166-lq.mp3",
-      chef: "https://freesound.org/data/previews/441/441695_5665277-lq.mp3" // pique la trompette
-    };
+  <!-- Modal Quiz -->
+  <div id="quiz-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000dd; color:white; padding:20px; box-sizing:border-box; z-index:9999; overflow:auto;">
+    <div style="max-width:500px; margin:auto; background:#222; padding:20px; border-radius:10px;">
+      <h2 style="color:#c8102e;">🎭 Quel musicien es-tu ?</h2>
+      <div id="quiz-content"></div>
+      <div style="text-align:right; margin-top:20px;">
+        <button onclick="closeQuiz()" style="background:#c8102e;color:white;padding:10px 20px;border:none;border-radius:6px;">Fermer</button>
+      </div>
+    </div>
+  </div>
 
-    /* Quiz Questions */
-    const quizQuestions = [
-      {
-        q: "En répète, ton comportement habituel ?",
-        options: [
-          { text: "Tu balances un solo improvisé direct.", instrument: "trompette" },
-          { text: "Tu arrives avec 15 minutes de retard… tranquille.", instrument: "trombone" },
-          { text: "Tu joues sérieusement mais discrètement.", instrument: "clarinette" },
-          { text: "Tu tapes du rythme partout, même sur ta chaise.", instrument: "percu" },
-          { text: "Tu cries 'Encore une fois !' toutes les 2 minutes.", instrument: "chef" }
-        ]
-      },
-      {
-        q: "Avant de monter sur scène, tu es plutôt...",
-        options: [
-          { text: "En train de te recoiffer devant le miroir.", instrument: "trompette" },
-          { text: "Déjà au bar à rigoler.", instrument: "trombone" },
-          { text: "Stressé mais concentré sur ta partition.", instrument: "clarinette" },
-          { text: "En train de faire un roulement avec des baguettes.", instrument: "percu" },
-          { text: "En train de vérifier que tout le monde est bien en place.", instrument: "chef" }
-        ]
-      },
-      {
-        q: "Si on te cherche pendant une presta, on te trouve...",
-        options: [
-          { text: "Devant, en train de briller.", instrument: "trompette" },
-          { text: "Au milieu du public à danser.", instrument: "trombone" },
-          { text: "Caché derrière un pupitre.", instrument: "clarinette" },
-          { text: "En train de frapper tout ce qui fait du bruit.", instrument: "percu" },
-          { text: "En train d’agiter les bras frénétiquement.", instrument: "chef" }
-        ]
-      },
-      {
-        q: "Ton pire défaut selon les autres ?",
-        options: [
-          { text: "Trop bruyant.", instrument: "trompette" },
-          { text: "Trop imprévisible.", instrument: "trombone" },
-          { text: "Trop sérieux.", instrument: "clarinette" },
-          { text: "Trop énergique.", instrument: "percu" },
-          { text: "Trop autoritaire.", instrument: "chef" }
-        ]
-      },
-      {
-        q: "Ton rêve secret ?",
-        options: [
-          { text: "Un solo de 10 minutes sous les projecteurs.", instrument: "trompette" },
-          { text: "Devenir la star d’un after au bar.", instrument: "trombone" },
-          { text: "Jouer un concerto parfait sans couac.", instrument: "clarinette" },
-          { text: "Un solo de batterie de 20 minutes.", instrument: "percu" },
-          { text: "Diriger un orchestre de 200 musiciens.", instrument: "chef" }
-        ]
-      }
+  <script>
+    // --- DATA ---
+    const lateAnswers = [
+      "Vanessa", "Le nouveau gouvernement", "Léo", "Rémi", "Angèle",
+      "Garance", "Nataél", "Léandre", "Louise", "le carnet 2",
+      "les Lopez", "les Ducournau", "les Trinquant",
+      "La Thomann Family", "les Percussion et leur tempo :D ....",
+      "la SNCF"
     ];
 
-    /* Descriptions caricaturales */
+    const instrumentSounds = [
+      "https://freesound.org/data/previews/441/441695_5665277-lq.mp3", // trompette
+      "https://freesound.org/data/previews/35/35143_512123-lq.mp3",    // cymbales
+      "https://freesound.org/data/previews/66/66717_634166-lq.mp3",    // tambour
+      "https://freesound.org/data/previews/85/85962_95369-lq.mp3"      // trombone glissando
+    ];
+
+    const jokes = [
+      { question: "Comment un jazz man fait-il pour devenir millionnaire ?", answer: "il commence milliardaire !" },
+      { question: "Quel est le point commun entre les Beatles et les Percus de la Banda ?", answer: "Cela fait plus de 40 ans qu’ils ne jouent plus ensemble !" },
+      { question: "Qu'est-ce qu'un demie ton en Banda ?", answer: "Deux Flûte qui jouent à l'unisson <3" },
+      { question: "Le chef en répétition : - Trombone 2 tu joues trop fort !!!", answer: "Les autres : Il n'est pas là .... - Vous lui direz quand il reviendra !" },
+      { question: "Pourquoi les Souba sont toujours en retard ?", answer: "Parce qu’ils suivent leur propre tempo" },
+      { question: "Comment faire cuire un poisson avec son Eupho ?", answer: "Mettez-le dans le pavillon et jouez Do Ré La Sol" },
+      { question: "Pourquoi les musiciens aiment faire le ménage ?", answer: "Car le Sol c'est Fa Si La Si Ré" },
+      { question: "Quelle est la note qui est toujours malade", answer: "le Fa bémol parce qu’il vaut Mi" },
+      { question: "Quelle est le point commun entre un sax alto et une grenade ?", answer: "Quand tu l’entends, c’est trop tard..." },
+      { question: "Pourquoi les clarinettiste ont toujours une ferme ?", answer: "A force de faire des canards... " }
+    ];
+
+    const games = [
+      "https://www.scriptendo.fr/Piano/lecture.php?j=entr#ancre",
+      "https://www.apprendrelesolfege.com/jeux-pour-apprendre-le-solfege#title_2",
+      "https://www.apprendrelesolfege.com/jeu-de-rythme",
+      "https://elgoog.im/dino/",
+      "https://artsandculture.google.com/experiment/blob-opera/AAHWrq360NcGbw",
+      "https://slopegame.io/",
+      "https://www.incredibox.com/demo/",
+      "https://musiclab.chromeexperiments.com/"
+    ];
+
+    const playlistId = "PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9";
+
     const instrumentDescriptions = {
-      trompette: "🎺 Trompette : Toujours plus fort, toujours plus haut. Tu es la diva du groupe (même quand personne ne t’a demandé).",
-      trombone: "🎷 Trombone : Tu glisses partout, surtout au bar. Tu es imprévisible et un peu bruyant, mais irrésistible.",
-      clarinette: "🎶 Clarinette : Tu bosses sérieusement mais tu fais des canards mémorables. Entre rigueur et fou rire, tu es unique.",
-      percu: "🥁 Percu : Tu cognes sur tout, tout le temps. Pour toi, tout est instrument… sauf peut-être ta vaisselle cassée.",
-      chef: "🧑‍🎤 Chef : Tu n’as pas d’instrument mais tu as des bras. Et tu es persuadé que c’est suffisant pour diriger tout le monde."
+      trompette: "🎺 **Trompette** : Toujours plus fort, toujours plus haut. Tu te crois la star du show (et parfois tu l’es). Ton pire ennemi ? Le bouton de volume.",
+      trombone: "🎷 **Trombone** : Tu glisses partout, dans la musique comme au bar. Tu es imprévisible, mais c’est ce qui fait ton charme (enfin… parfois).",
+      clarinette: "🎶 **Clarinette** : Tu bosses sérieusement… mais tu lâches des canards mémorables. Personne ne sait si tu rigoles ou si tu pleures.",
+      percu: "🥁 **Percu** : Tu cognes sur tout, tout le temps. Pour toi, une table, un gobelet ou une casserole c’est déjà un instrument. Ton voisin de chambre te déteste.",
+      chef: "🧑‍🎤 **Chef** : Tu n’as pas d’instrument… mais tu as les bras. Et tu penses que ça suffit pour diriger tout ce petit monde (même si personne ne te regarde vraiment).",
+      saxophone: "🎷 **Saxophone** : Tu improvises toujours, même sur ‘Au Clair de la Lune’. Tu crois être irrésistible, mais en vrai on attend juste que tu termines ton solo de 15 minutes.",
+      flute: "🎵 **Flûte** : Tu joues discrètement, presque trop… jusqu’au moment où tu balances un aigu strident qui réveille tout le quartier."
     };
 
-    /* Quiz logique */
-    const quizModal = document.getElementById("quiz-modal");
-    const quizContent = document.getElementById("quiz-content");
+    // --- ELEMENTS ---
+    const lateAnswerEl = document.getElementById("late-answer");
+    const jokeQuestionEl = document.getElementById("joke-question");
+    const jokeAnswerEl = document.getElementById("joke-answer");
+    const backButton = document.getElementById("back-button");
+    const newJokeButton = document.getElementById("new-joke-button");
+    const playGameButton = document.getElementById("play-game-button");
+    const soundButton = document.getElementById("sound-button");
     const quizButton = document.getElementById("quiz-button");
-    const quizCloseBtn = document.getElementById("quiz-close-btn");
+    const bandaFm = document.getElementById("banda-fm");
 
-    function openQuiz() {
-      let currentQuestion = 0;
-      const scores = { trompette: 0, trombone: 0, clarinette: 0, percu: 0, chef: 0 };
+    // --- FUNCTIONS ---
+    function randomFromArray(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function updateContent() {
+      lateAnswerEl.textContent = randomFromArray(lateAnswers);
+      const joke = randomFromArray(jokes);
+      jokeQuestionEl.textContent = joke.question;
+      jokeAnswerEl.textContent = joke.answer;
+      loadRandomSong();
+    }
+
+    function loadRandomSong() {
+      const startIndex = Math.floor(Math.random() * 20); // prend un titre au hasard dans la playlist
+      bandaFm.src = `https://www.youtube.com/embed/videoseries?list=${playlistId}&index=${startIndex}`;
+    }
+
+    // --- EVENTS ---
+    newJokeButton.addEventListener("click", updateContent);
+    backButton.addEventListener("click", () => {
+      window.location.href = "https://sites.google.com/bandadesbordsdemarne.com/public/espace-membres/infos-presta";
+    });
+    playGameButton.addEventListener("click", () => {
+      const gameUrl = randomFromArray(games);
+      window.open(gameUrl, "_blank");
+    });
+    soundButton.addEventListener("click", () => {
+      const sound = new Audio(randomFromArray(instrumentSounds));
+      sound.play();
+    });
+
+    quizButton.addEventListener("click", () => {
+      startQuiz();
+    });
+
+    // --- QUIZ ---
+    const quizQuestions = [
+      { q: "Tu arrives à la répète :", a: { trompette:1, trombone:1, clarinette:1, percu:1, chef:1, saxophone:1, flute:1 } },
+      { q: "On t’entend surtout :", a: { trompette:2, trombone:1, clarinette:1, percu:2, saxophone:1, flute:1 } },
+      { q: "Ton accessoire indispensable :", a: { trompette:1, trombone:1, clarinette:1, percu:2, chef:2, saxophone:1, flute:1 } },
+      { q: "Tu rates une note, tu fais quoi :", a: { trompette:1, trombone:1, clarinette:2, percu:1, saxophone:1, flute:2 } },
+      { q: "Ton rêve secret :", a: { trompette:2, trombone:1, clarinette:1, percu:1, chef:2, saxophone:2, flute:1 } }
+    ];
+
+    function startQuiz() {
+      let scores = { trompette:0, trombone:0, clarinette:0, percu:0, chef:0, saxophone:0, flute:0 };
+      let index = 0;
 
       function showQuestion() {
-        const q = quizQuestions[currentQuestion];
-        let html = `<p><b>${q.q}</b></p>`;
-        q.options.forEach((opt, idx) => {
-          html += `<div style="margin:6px 0;">
-            <label><input type="radio" name="q${currentQuestion}" value="${opt.instrument}"> ${opt.text}</label>
-          </div>`;
-        });
-        html += `<div style="margin-top:15px; text-align:right;">
-          <button id="quiz-next">Suivant</button>
-        </div>
-        <div id="quiz-result" class="quiz-result"></div>`;
-        quizContent.innerHTML = html;
-
-        document.getElementById("quiz-next").addEventListener("click", () => {
-          const selected = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
-          if (!selected) {
-            document.getElementById("quiz-result").textContent = "👉 Choisis une option pour continuer !";
-            return;
-          }
-          scores[selected.value]++;
-          currentQuestion++;
-          if (currentQuestion < quizQuestions.length) {
-            showQuestion();
-          } else {
-            showResult();
-          }
+        if (index >= quizQuestions.length) {
+          showResult();
+          return;
+        }
+        const q = quizQuestions[index];
+        const div = document.getElementById("quiz-content");
+        div.innerHTML = `<p style="font-size:1.2rem;margin-bottom:15px;">${q.q}</p>`;
+        Object.keys(q.a).forEach(inst => {
+          const btn = document.createElement("button");
+          btn.textContent = inst.charAt(0).toUpperCase() + inst.slice(1);
+          btn.style.margin = "5px";
+          btn.onclick = () => { scores[inst]+=q.a[inst]; index++; showQuestion(); };
+          div.appendChild(btn);
         });
       }
 
       function showResult() {
-        const winner = Object.entries(scores).sort((a,b) => b[1]-a[1])[0][0];
-        const desc = instrumentDescriptions[winner];
-        quizContent.innerHTML = `
-          <h3>🥳 Résultat : ${desc}</h3>
-          <button id="play-sound" style="margin-top:12px;">🔊 Joue ton instrument</button>
-        `;
-        document.getElementById("play-sound").addEventListener("click", () => {
-          const sound = new Audio(instrumentSounds[winner]);
-          sound.play();
-        });
+        let best = Object.keys(scores).reduce((a,b) => scores[a] > scores[b] ? a : b);
+        const div = document.getElementById("quiz-content");
+        div.innerHTML = `<h3>Tu es : ${instrumentDescriptions[best]}</h3>`;
       }
 
-      quizModal.style.display = "block";
-      quizModal.setAttribute('aria-hidden','false');
+      document.getElementById("quiz-modal").style.display = "block";
       showQuestion();
     }
 
     function closeQuiz() {
-      quizModal.style.display = "none";
-      quizModal.setAttribute('aria-hidden','true');
-      quizContent.innerHTML = "";
+      document.getElementById("quiz-modal").style.display = "none";
     }
 
-    quizButton.addEventListener("click", openQuiz);
-    quizCloseBtn.addEventListener("click", closeQuiz);
-    quizModal.addEventListener("click", (ev) => { if (ev.target === quizModal) closeQuiz(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && quizModal.style.display === "block") closeQuiz(); });
-
-    /* Blagues + autres boutons */
-    const lateAnswers = ["Vanessa","Le nouveau gouvernement","Léo","Rémi","Angèle","Garance","Nataél","Léandre","Louise","le carnet 2","les Lopez","les Ducournau","les Trinquant","La Thomann Family","les Percussion et leur tempo :D ....","la SNCF"];
-    const jokes = [
-      { question: "Comment un jazz man fait-il pour devenir millionnaire ?", answer: "il commence milliardaire !" },
-      { question: "Pourquoi les clarinettistes ont toujours une ferme ?", answer: "À force de faire des canards 🦆" }
-    ];
-    const games = ["https://elgoog.im/dino/","https://musiclab.chromeexperiments.com/"];
-    function randomFromArray(arr){return arr[Math.floor(Math.random()*arr.length)];}
-    const lateAnswerEl=document.getElementById("late-answer");
-    const jokeQuestionEl=document.getElementById("joke-question");
-    const jokeAnswerEl=document.getElementById("joke-answer");
-    function updateContent(){lateAnswerEl.textContent=randomFromArray(lateAnswers);const joke=randomFromArray(jokes);jokeQuestionEl.textContent=joke.question;jokeAnswerEl.textContent=joke.answer;}
+    // --- INIT ---
     updateContent();
-    document.getElementById("new-joke-button").addEventListener("click",updateContent);
-    document.getElementById("back-button").addEventListener("click",()=>{window.location.href="https://sites.google.com/bandadesbordsdemarne.com/public/espace-membres/infos-presta";});
-    document.getElementById("play-game-button").addEventListener("click",()=>{window.open(randomFromArray(games),"_blank");});
-    document.getElementById("sound-button").addEventListener("click",()=>{const sound=new Audio(randomFromArray(Object.values(instrumentSounds)));sound.play();});
   </script>
 </body>
 </html>

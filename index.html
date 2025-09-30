@@ -63,8 +63,9 @@ iframe.playlist{border-radius:8px;}
   </div>
 </div>
 
-<!-- Sad Trombone audio -->
+<!-- Audio -->
 <audio id="sad-trombone" src="sad-trombone.mp3" preload="auto"></audio>
+<audio id="ding" src="ding.mp3" preload="auto"></audio>
 
 <script>
 /* ===== Données ===== */
@@ -88,7 +89,7 @@ const instruments=["trompette","trombone","clarinette","percu","chef","saxophone
 const instrumentDescriptions={
   trompette:"🎺 Trompette : Toujours plus fort, toujours plus haut. Tu te crois la star du show (et parfois tu l’es). Ton pire ennemi ? Le bouton de volume.",
   trombone:"📎 Trombone : Tu glisses partout, dans la musique comme au bar. Tu es imprévisible, mais c’est ce qui fait ton charme (enfin… parfois).",
-  clarinette:"🎶 Clarinette : Tu bosses sérieusement… mais tu lâches des canards mémorables. Entre rigueur et fou rire tu es unique !",
+  clarinette:"🎶 Clarinette : Tu bosses sérieusement… mais tu lâches des canards mémorables. Personne ne sait si tu rigoles ou si tu pleures.",
   percu:"🥁 Percu : Tu cognes sur tout, tout le temps. Pour toi, une table, un gobelet ou une casserole c’est déjà un instrument. Ton voisin de chambre te déteste.",
   chef:"🧑‍🎤 Chef : Tu n’as pas d’instrument… mais tu as les bras. Et tu penses que ça suffit pour diriger tout ce petit monde (même si personne ne te regarde vraiment).",
   saxophone:"🎷 Saxophone : Tu improvises toujours, même sur ‘Au Clair de la Lune’. Tu crois être irrésistible, mais en vrai on attend juste que tu termines ton solo de 15 minutes.",
@@ -150,11 +151,10 @@ function loadRandomSong(){
   bandaFm=document.getElementById('banda-fm');
 }
 
-/* ===== Mise à jour blagues et retardataires ===== */
+/* ===== Blagues et retardataires ===== */
 const lateAnswerEl=document.getElementById("late-answer");
 const jokeQuestionEl=document.getElementById("joke-question");
 const jokeAnswerEl=document.getElementById("joke-answer");
-
 function updateContent(){
   lateAnswerEl.textContent=randomFromArray(lateAnswers);
   const j=randomFromArray(jokes);
@@ -177,24 +177,34 @@ function openQuiz(){
   function showQuestion(){
     if(index>=quizQuestions.length){
       let maxInstrument=instruments[0];
-      instruments.forEach(i=>{if(scores[i]>scores[maxInstrument])maxInstrument=i});
+      instruments.forEach(i=>{if(scores[i]>scores[maxInstrument]) maxInstrument=i});
+
       quizContent.innerHTML=`<div class="quiz-result">${instrumentDescriptions[maxInstrument]}</div>`;
 
-      // Jouer le Sad Trombone
-      const audio=document.getElementById('sad-trombone');
-      audio.currentTime=0;
-      audio.play().catch(e=>console.log("Lecture bloquée:",e));
+      // Jouer le son au résultat
+      setTimeout(()=>{
+        if(maxInstrument==="trombone"){
+          const audio=document.getElementById('sad-trombone');
+          audio.currentTime=0;
+          audio.play().catch(e=>console.log("Lecture bloquée:",e));
+        }else{
+          const audio=document.getElementById('ding');
+          audio.currentTime=0;
+          audio.play().catch(e=>console.log("Lecture bloquée:",e));
+        }
+      },50);
       return;
     }
+
     const q=quizQuestions[index];
     const optionsShuffled=shuffleArray([...q.options]);
     let html=`<div class="quiz-q">${q.q}</div>`;
-    optionsShuffled.forEach((opt,i)=>{html+=`<div class="quiz-opt" data-instr="${opt.instrument}">${opt.text}</div>`;});
+    optionsShuffled.forEach(opt=>{html+=`<div class="quiz-opt" data-instr="${opt.instrument}">${opt.text}</div>`;});
     quizContent.innerHTML=html;
+
     quizContent.querySelectorAll('.quiz-opt').forEach(opt=>{
       opt.addEventListener('click',()=>{
-        const instr=opt.dataset.instr;
-        scores[instr]++;
+        scores[opt.dataset.instr]++;
         index++;
         showQuestion();
       });
@@ -216,6 +226,5 @@ document.getElementById("play-game-button").addEventListener("click",()=>window.
 /* ===== Initialisation ===== */
 updateContent();
 </script>
-
 </body>
 </html>

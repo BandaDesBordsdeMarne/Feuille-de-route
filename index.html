@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="utf-8" />
@@ -66,6 +65,7 @@
 
 <script>
 /* ===== Données ===== */
+let bandaFm = document.getElementById('banda-fm');
 const playlistId = "PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9";
 const lateAnswers = ["Vanessa","Le nouveau gouvernement","Léo","Rémi","Angèle","Garance","Nataél","Léandre","Louise","le carnet 2","les Lopez","les Ducournau","les Trinquant","La Thomann Family","les Percussion et leur tempo :D ....","la SNCF"];
 const jokes = [
@@ -80,7 +80,7 @@ const games = ["https://elgoog.im/dino/","https://musiclab.chromeexperiments.com
 const instruments = ["trompette","trombone","clarinette","percu","chef","saxophone","flute"];
 const instrumentDescriptions = {
   trompette: "🎺 Trompette : Toujours plus fort, toujours plus haut. Tu te crois la star du show (et parfois tu l’es). Ton pire ennemi ? Le bouton de volume.",
-  trombone: "🎷 Trombone : Tu glisses partout, dans la musique comme au bar. Tu es imprévisible, mais c’est ce qui fait ton charme (enfin… parfois).",
+  trombone: "📎 Trombone : Tu glisses partout, dans la musique comme au bar. Tu es imprévisible, mais c’est ce qui fait ton charme (enfin… parfois).",
   clarinette: "🎶 Clarinette : Tu bosses sérieusement… mais tu lâches des canards mémorables. Personne ne sait si tu rigoles ou si tu pleures.",
   percu: "🥁 Percu : Tu cognes sur tout, tout le temps. Pour toi, une table, un gobelet ou une casserole c’est déjà un instrument. Ton voisin de chambre te déteste.",
   chef: "🧑‍🎤 Chef : Tu n’as pas d’instrument… mais tu as les bras. Et tu penses que ça suffit pour diriger tout ce petit monde (même si personne ne te regarde vraiment).",
@@ -125,21 +125,47 @@ const quizQuestions = [
       { text: "En train d’improviser un long solo jazzy.", instrument: "saxophone" },
       { text: "En train de souffler un peu loin des projecteurs.", instrument: "flute" }
     ]
+  },
+  {
+    q: "Si tu étais en retard à la répétition, que dirais-tu ?",
+    options: [
+      { text: "Je suis arrivé à l’heure… enfin, presque", instrument: "trompette" },
+      { text: "Désolé, j’ai dû m’arrêter pour rigoler un peu", instrument: "trombone" },
+      { text: "J’ai suivi mes notes à la lettre… mais lentement", instrument: "clarinette" },
+      { text: "J’ai frappé sur tout ce que j’ai trouvé pour rester motivé", instrument: "percu" },
+      { text: "Je vérifie que tout est prêt pour les autres", instrument: "chef" },
+      { text: "J’ai improvisé le chemin pour arriver", instrument: "saxophone" },
+      { text: "Je me suis échauffé tranquillement avant de venir", instrument: "flute" }
+    ]
+  },
+  {
+    q: "Comment tu te comportes pendant un solo des autres ?",
+    options: [
+      { text: "Je les encourage et je fais un clin d’œil", instrument: "trompette" },
+      { text: "Je commente discrètement et je ris un peu", instrument: "trombone" },
+      { text: "J’observe et note tous les détails", instrument: "clarinette" },
+      { text: "Je tape le rythme avec tout ce que j’ai sous la main", instrument: "percu" },
+      { text: "Je surveille que tout reste bien synchronisé", instrument: "chef" },
+      { text: "Je me lance dans un petit contrepoint improvisé", instrument: "saxophone" },
+      { text: "Je souffle doucement et profite du son", instrument: "flute" }
+    ]
   }
 ];
 
 /* ===== Fonctions utilitaires ===== */
 function randomFromArray(a){ return a[Math.floor(Math.random()*a.length)]; }
 
+/* ===== Playlist ===== */
+function loadRandomSong(){
+  const index = Math.floor(Math.random()*10);
+  bandaFm.outerHTML = `<iframe id="banda-fm" class="playlist" width="320" height="180" src="https://www.youtube.com/embed/videoseries?list=${playlistId}&index=${index}&autoplay=1" title="Playlist Banda" frameborder="0" allowfullscreen></iframe>`;
+  bandaFm = document.getElementById('banda-fm');
+}
+
+/* ===== Mise à jour blagues et retardataires ===== */
 const lateAnswerEl = document.getElementById("late-answer");
 const jokeQuestionEl = document.getElementById("joke-question");
 const jokeAnswerEl = document.getElementById("joke-answer");
-const bandaFm = document.getElementById('banda-fm');
-
-function loadRandomSong(){
-  const index = Math.floor(Math.random()*10);
-  bandaFm.src = `https://www.youtube.com/embed/videoseries?list=${playlistId}&index=${index}&autoplay=1`;
-}
 
 function updateContent(){
   lateAnswerEl.textContent = randomFromArray(lateAnswers);
@@ -159,7 +185,7 @@ function openQuiz(){
   let index = 0;
   const scores = {};
   instruments.forEach(i=>scores[i]=0);
-  
+
   function showQuestion(){
     if(index>=quizQuestions.length){
       // résultat
@@ -170,9 +196,7 @@ function openQuiz(){
     }
     const q = quizQuestions[index];
     let html = `<div class="quiz-q">${q.q}</div>`;
-    q.options.forEach((opt,i)=>{
-      html+=`<div class="quiz-opt" data-i="${i}">${opt.text}</div>`;
-    });
+    q.options.forEach((opt,i)=>{ html+=`<div class="quiz-opt" data-i="${i}">${opt.text}</div>` });
     quizContent.innerHTML = html;
     quizContent.querySelectorAll('.quiz-opt').forEach(opt=>{
       opt.addEventListener('click',e=>{
@@ -184,9 +208,11 @@ function openQuiz(){
       });
     });
   }
+
   quizModal.style.display='block';
   showQuestion();
 }
+
 quizButton.addEventListener('click',openQuiz);
 quizClose.addEventListener('click',()=>quizModal.style.display='none');
 
@@ -201,4 +227,3 @@ updateContent();
 
 </body>
 </html>
-

@@ -66,10 +66,8 @@
       gap: 15px;
       border-top: 1px solid #c8102e;
     }
-    
-<button id="sound-button">🔊 Joue un instrument</button>
-<button id="quiz-button">🎭 Quel musicien es-tu ?</button>
-    
+
+    /* Styles globaux pour les boutons (restore couleur + taille) */
     button {
       background-color: #c8102e;
       border: none;
@@ -80,27 +78,57 @@
       cursor: pointer;
       font-size: 1rem;
       white-space: nowrap;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.08s ease;
     }
 
     button:hover {
       background-color: #a00f23;
     }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    /* Modal */
+    #quiz-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #000000dd;
+      color: white;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 9999;
+      overflow: auto;
+    }
+    .quiz-inner {
+      max-width: 520px;
+      margin: 40px auto;
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .quiz-inner h2 { color: #c8102e; margin-top: 0; }
+    .quiz-result { margin-top: 12px; font-weight: bold; }
+    .small { font-size: 0.9rem; opacity: 0.9; }
+    iframe.playlist { border-radius: 8px; display:block; margin: 16px auto; }
   </style>
 </head>
-  <div id="quiz-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000dd; color:white; padding:20px; box-sizing:border-box; z-index:9999; overflow:auto;">
-  <div style="max-width:500px; margin:auto; background:#222; padding:20px; border-radius:10px;">
-    <h2 style="color:#c8102e;">🎭 Quel musicien es-tu ?</h2>
-    <div id="quiz-content">
-      <!-- contenu dynamique ici -->
-    </div>
-    <div style="text-align:right; margin-top:20px;">
-      <button onclick="closeQuiz()" style="background:#c8102e;color:white;padding:10px 20px;border:none;border-radius:6px;">Fermer</button>
+<body>
+
+  <!-- Modal quiz (correctement dans le body) -->
+  <div id="quiz-modal" aria-hidden="true">
+    <div class="quiz-inner" role="dialog" aria-modal="true" aria-labelledby="quiz-title">
+      <h2 id="quiz-title">🎭 Quel musicien es-tu ?</h2>
+      <div id="quiz-content">
+        <!-- sera rempli par JS -->
+      </div>
+      <div style="text-align:right; margin-top:20px;">
+        <button id="quiz-close-btn" style="background:#c8102e;color:white;padding:10px 20px;border:none;border-radius:6px;">Fermer</button>
+      </div>
     </div>
   </div>
-</div>
-
-<body>
 
   <div id="top-message">
     Désolé pas encore de feuille de route ! Les infos arrivent toujours en retard... comme<br/>
@@ -112,13 +140,26 @@
     <div class="answer" id="joke-answer">il commence milliardaire !</div>
   </div>
 
+  <!-- Section radio / playlist -->
+  <div style="text-align:center; margin: 30px 0;">
+    <h2 style="color:#c8102e;">📻 La Banda FM</h2>
+    <iframe class="playlist" width="300" height="169"
+      src="https://www.youtube.com/embed/videoseries?list=PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9"
+      title="Playlist Banda" frameborder="0" allowfullscreen></iframe>
+  </div>
+
   <div id="buttons-container">
+    <!-- Boutons restaurés ici -->
+    <button id="sound-button">🔊 Joue un instrument</button>
+    <button id="quiz-button">🎭 Quel musicien es-tu ?</button>
+
     <button id="back-button">Retour à l’espace musiciens</button>
     <button id="new-joke-button">Encore une blague</button>
     <button id="play-game-button">Jouons ensemble</button>
   </div>
 
   <script>
+    /* Données */
     const lateAnswers = [
       "Vanessa", "Le nouveau gouvernement", "Léo", "Rémi", "Angèle",
       "Garance", "Nataél", "Léandre", "Louise", "le carnet 2",
@@ -126,60 +167,25 @@
       "La Thomann Family", "les Percussion et leur tempo :D ....",
       "la SNCF"
     ];
-    
-const instrumentSounds = [
-  "https://freesound.org/data/previews/441/441695_5665277-lq.mp3", // trompette
-  "https://freesound.org/data/previews/35/35143_512123-lq.mp3",    // cymbales
-  "https://freesound.org/data/previews/147/147613_2615118-lq.mp3", // couac (drôle)
-  "https://freesound.org/data/previews/66/66717_634166-lq.mp3",     // tambour
-];
 
-document.getElementById("sound-button").addEventListener("click", () => {
-  const sound = new Audio(randomFromArray(instrumentSounds));
-  sound.play();
-});
+    const instrumentSounds = [
+      "https://freesound.org/data/previews/441/441695_5665277-lq.mp3", // trompette
+      "https://freesound.org/data/previews/35/35143_512123-lq.mp3",    // cymbales
+      "https://freesound.org/data/previews/147/147613_2615118-lq.mp3", // couac (drôle)
+      "https://freesound.org/data/previews/66/66717_634166-lq.mp3"     // tambour
+    ];
 
     const jokes = [
-      {
-        question: "Comment un jazz man fait-il pour devenir millionnaire ?",
-        answer: "il commence milliardaire !"
-      },
-      {
-        question: "Quel est le point commun entre les Beatles et les Percus de la Banda ?",
-        answer: "Cela fait plus de 40 ans qu’ils ne jouent plus ensemble !"
-      },
-      {
-        question: "Qu'est-ce qu'un demie ton en Banda ?",
-        answer: "Deux Flûte qui jouent à l'unisson <3"
-      },
-      {
-        question: "Le chef en répétition : - Trombone 2 tu joues trop fort !!!",
-        answer: "Les autres : Il n'est pas là .... - Vous lui direz quand il reviendra !"
-      },
-      {
-        question: "Pourquoi les Souba sont toujours en retard ?",
-        answer: "Parce qu’ils suivent leur propre tempo"
-      },
-      {
-        question: "Comment faire cuire un poisson avec son Eupho ?",
-        answer: "Mettez-le dans le pavillon et jouez Do Ré La Sol"
-      },
-      {
-        question: "Pourquoi les musiciens aiment faire le ménage ?",
-        answer: "Car le Sol c'est Fa Si La Si Ré"
-      },
-      {
-        question: "Quelle est la note qui est toujours malade",
-        answer: "le Fa bémol parce qu’il vaut Mi"
-      },
-      {
-        question: "Quelle est le point commun entre un sax alto et une grenade ?",
-        answer: "Quand tu l’entends, c’est trop tard..."
-      },
-      {
-        question: "Pourquoi les clarinettiste ont toujours une ferme ?",
-        answer: "A force de faire des canards... "
-      }
+      { question: "Comment un jazz man fait-il pour devenir millionnaire ?", answer: "il commence milliardaire !" },
+      { question: "Quel est le point commun entre les Beatles et les Percus de la Banda ?", answer: "Cela fait plus de 40 ans qu’ils ne jouent plus ensemble !" },
+      { question: "Qu'est-ce qu'un demie ton en Banda ?", answer: "Deux Flûte qui jouent à l'unisson <3" },
+      { question: "Le chef en répétition : - Trombone 2 tu joues trop fort !!!", answer: "Les autres : Il n'est pas là .... - Vous lui direz quand il reviendra !" },
+      { question: "Pourquoi les Souba sont toujours en retard ?", answer: "Parce qu’ils suivent leur propre tempo" },
+      { question: "Comment faire cuire un poisson avec son Eupho ?", answer: "Mettez-le dans le pavillon et jouez Do Ré La Sol" },
+      { question: "Pourquoi les musiciens aiment faire le ménage ?", answer: "Car le Sol c'est Fa Si La Si Ré" },
+      { question: "Quelle est la note qui est toujours malade", answer: "le Fa bémol parce qu’il vaut Mi" },
+      { question: "Quelle est le point commun entre un sax alto et une grenade ?", answer: "Quand tu l’entends, c’est trop tard..." },
+      { question: "Pourquoi les clarinettiste ont toujours une ferme ?", answer: "A force de faire des canards... " }
     ];
 
     const games = [
@@ -193,35 +199,45 @@ document.getElementById("sound-button").addEventListener("click", () => {
       "https://musiclab.chromeexperiments.com/"
     ];
 
-    const lateAnswerEl = document.getElementById("late-answer");
-    const jokeQuestionEl = document.getElementById("joke-question");
-    const jokeAnswerEl = document.getElementById("joke-answer");
-    const backButton = document.getElementById("back-button");
-    const newJokeButton = document.getElementById("new-joke-button");
-    const playGameButton = document.getElementById("play-game-button");
-
+    /* Helpers */
     function randomFromArray(arr) {
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
+    /* Elements */
+    const lateAnswerEl = document.getElementById("late-answer");
+    const jokeQuestionEl = document.getElementById("joke-question");
+    const jokeAnswerEl = document.getElementById("joke-answer");
+
+    const soundButton = document.getElementById("sound-button");
+    const quizButton = document.getElementById("quiz-button");
+    const backButton = document.getElementById("back-button");
+    const newJokeButton = document.getElementById("new-joke-button");
+    const playGameButton = document.getElementById("play-game-button");
+
+    const quizModal = document.getElementById("quiz-modal");
+    const quizContent = document.getElementById("quiz-content");
+    const quizCloseBtn = document.getElementById("quiz-close-btn");
+
+    /* Update contenu principal */
     function updateContent() {
       lateAnswerEl.textContent = randomFromArray(lateAnswers);
       const joke = randomFromArray(jokes);
       jokeQuestionEl.textContent = joke.question;
       jokeAnswerEl.textContent = joke.answer;
     }
-    
-<div style="text-align:center; margin: 30px 0;">
-  <h2 style="color:#c8102e;">📻 La Banda FM</h2>
-  <iframe width="300" height="169" src="https://www.youtube.com/embed/videoseries?list=PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9" 
-    title="Playlist Banda" frameborder="0" allowfullscreen></iframe>
-</div>
 
-    updateContent();
-
-    newJokeButton.addEventListener("click", () => {
-      updateContent();
+    /* Buttons behavior */
+    soundButton.addEventListener("click", () => {
+      // click initiated -> allowed to play audio
+      const sound = new Audio(randomFromArray(instrumentSounds));
+      sound.play().catch(() => {
+        // fallback: rien (autoplay bloqué) — l'utilisateur peut cliquer de nouveau
+        console.warn("Lecture audio bloquée ou impossible.");
+      });
     });
+
+    newJokeButton.addEventListener("click", updateContent);
 
     backButton.addEventListener("click", () => {
       window.location.href = "https://sites.google.com/bandadesbordsdemarne.com/public/espace-membres/infos-presta";
@@ -231,6 +247,75 @@ document.getElementById("sound-button").addEventListener("click", () => {
       const gameUrl = randomFromArray(games);
       window.open(gameUrl, "_blank");
     });
+
+    /* Quiz modal (simple interaction) */
+    function openQuiz() {
+      // Construit un mini-quiz/interactif simple
+      quizContent.innerHTML = `
+        <p class="small">Choisis la phrase qui te correspond le mieux :</p>
+        <div>
+          <label><input type="radio" name="quiz" value="soliste"> J'adore être au centre de l'attention (soliste)</label><br/>
+          <label><input type="radio" name="quiz" value="section"> Je préfère jouer avec les autres (section)</label><br/>
+          <label><input type="radio" name="quiz" value="compose"> J'aime créer et arranger (compositeur)</label>
+        </div>
+        <div style="margin-top:12px; text-align:right;">
+          <button id="quiz-submit" style="padding:8px 14px;border-radius:6px;">Voir le résultat</button>
+        </div>
+        <div id="quiz-result" class="quiz-result"></div>
+      `;
+      quizModal.style.display = "block";
+      quizModal.setAttribute('aria-hidden', 'false');
+
+      // attach submit handler
+      const submitBtn = document.getElementById("quiz-submit");
+      submitBtn.addEventListener("click", () => {
+        const selected = document.querySelector('input[name="quiz"]:checked');
+        const resultEl = document.getElementById("quiz-result");
+        if (!selected) {
+          resultEl.textContent = "Choisis une option pour découvrir quel musicien tu es !";
+          return;
+        }
+        let resText = "";
+        switch (selected.value) {
+          case "soliste":
+            resText = "Tu es un Soliste : charisma, présence, solo endiablé 🎺";
+            break;
+          case "section":
+            resText = "Tu es un Joueur de Section : solide, fiable, indispensable 🥁";
+            break;
+          case "compose":
+            resText = "Tu es un Compositeur/Arrangeur : créatif, curieux, maître des harmonies 🎼";
+            break;
+          default:
+            resText = "Mystère... mais la Banda t'accueillera !";
+        }
+        resultEl.textContent = resText;
+      }, { once: true });
+    }
+
+    function closeQuiz() {
+      quizModal.style.display = "none";
+      quizModal.setAttribute('aria-hidden', 'true');
+      quizContent.innerHTML = "";
+    }
+
+    quizButton.addEventListener("click", openQuiz);
+    quizCloseBtn.addEventListener("click", closeQuiz);
+
+    // fermer modal si clic hors du contenu
+    quizModal.addEventListener("click", (ev) => {
+      if (ev.target === quizModal) closeQuiz();
+    });
+
+    // fermer au Esc
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && quizModal.style.display === "block") {
+        closeQuiz();
+      }
+    });
+
+    /* initialisation */
+    updateContent();
   </script>
 
 </body>

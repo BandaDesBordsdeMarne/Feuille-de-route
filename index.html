@@ -5,27 +5,27 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Banda des Bords de Marne — Quiz</title>
 <style>
-  :root{--banda:#c8102e;--bg:#111;--panel:#222;--btnhover:#a00f23;}
-  html,body{height:100%;margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#fff;display:flex;flex-direction:column;min-height:100vh;}
-  #top-message{background:#000;padding:28px 20px;text-align:center;font-size:1.6rem;line-height:1.3;color:var(--banda);}
-  #top-message .answer{color:#fff;display:block;margin-top:8px;font-weight:700;font-size:1.9rem;}
-  #joke-container{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:12px;text-align:center;}
-  .question{color:var(--banda);font-size:2rem;font-weight:700;margin-bottom:10px;white-space:pre-line;}
-  .answer{color:#fff;font-size:1.25rem;white-space:pre-line;}
-  #buttons-container{background:#000;padding:15px 12px 30px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;border-top:1px solid var(--banda);}
-  button{background:var(--banda);border:none;border-radius:8px;padding:12px 18px;color:#fff;font-weight:700;cursor:pointer;font-size:1rem;transition:background .2s,transform .06s;}
-  button:hover{background:var(--btnhover);}
-  button:active{transform:translateY(1px);}
-  .playlist-wrap{text-align:center;margin:18px 0;}
-  iframe.playlist{border-radius:8px;}
-  #quiz-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;padding:18px;box-sizing:border-box;overflow:auto;}
-  .quiz-box{max-width:720px;margin:28px auto;background:var(--panel);border-radius:12px;padding:18px;color:#fff;}
-  .quiz-box h2{color:var(--banda);margin:0 0 12px;}
-  .quiz-q{font-weight:700;margin-bottom:10px;color:var(--banda);}
-  .quiz-opt{margin:6px 0;cursor:pointer;padding:8px 12px;background:var(--banda);border-radius:6px;color:#fff;display:block;transition:background .2s;}
-  .quiz-opt:hover{background:#a00f23;}
-  .quiz-result{margin-top:12px;font-weight:700;color:#fff;}
-  @media(max-width:520px){.question{font-size:1.6rem}button{padding:10px 12px;font-size:.95rem}.quiz-box{margin:12px}}
+:root{--banda:#c8102e;--bg:#111;--panel:#222;--btnhover:#a00f23;}
+html,body{height:100%;margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#fff;display:flex;flex-direction:column;min-height:100vh;}
+#top-message{background:#000;padding:28px 20px;text-align:center;font-size:1.6rem;line-height:1.3;color:var(--banda);}
+#top-message .answer{color:#fff;display:block;margin-top:8px;font-weight:700;font-size:1.9rem;}
+#joke-container{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:12px;text-align:center;}
+.question{color:var(--banda);font-size:2rem;font-weight:700;margin-bottom:10px;white-space:pre-line;}
+.answer{color:#fff;font-size:1.25rem;white-space:pre-line;}
+#buttons-container{background:#000;padding:15px 12px 30px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;border-top:1px solid var(--banda);}
+button{background:var(--banda);border:none;border-radius:8px;padding:12px 18px;color:#fff;font-weight:700;cursor:pointer;font-size:1rem;transition:background .2s,transform .06s;}
+button:hover{background:var(--btnhover);}
+button:active{transform:translateY(1px);}
+.playlist-wrap{text-align:center;margin:18px 0;}
+iframe.playlist{border-radius:8px;}
+#quiz-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;padding:18px;box-sizing:border-box;overflow:auto;}
+.quiz-box{max-width:720px;margin:28px auto;background:var(--panel);border-radius:12px;padding:18px;color:#fff;}
+.quiz-box h2{color:var(--banda);margin:0 0 12px;}
+.quiz-q{font-weight:700;margin-bottom:10px;color:var(--banda);}
+.quiz-opt{margin:6px 0;cursor:pointer;padding:8px 12px;background:var(--banda);border-radius:6px;color:#fff;display:block;transition:background .2s;}
+.quiz-opt:hover{background:#a00f23;}
+.quiz-result{margin-top:12px;font-weight:700;color:#fff;}
+@media(max-width:520px){.question{font-size:1.6rem}button{padding:10px 12px;font-size:.95rem}.quiz-box{margin:12px}}
 </style>
 </head>
 <body>
@@ -67,7 +67,9 @@
 /* ===== Données ===== */
 let bandaFm = document.getElementById('banda-fm');
 const playlistId = "PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9";
+
 const lateAnswers = ["Vanessa","Le nouveau gouvernement","Léo","Rémi","Angèle","Garance","Nataél","Léandre","Louise","le carnet 2","les Lopez","les Ducournau","les Trinquant","La Thomann Family","les Percussion et leur tempo :D ....","la SNCF"];
+
 const jokes = [
   { question: "Comment un jazz man fait-il pour devenir millionnaire ?", answer: "il commence milliardaire !" },
   { question: "Quel est le point commun entre les Beatles et les Percus de la Banda ?", answer: "Cela fait plus de 40 ans qu’ils ne jouent plus ensemble !" },
@@ -76,132 +78,134 @@ const jokes = [
   { question: "Pourquoi les Souba sont toujours en retard ?", answer: "Parce qu’ils suivent leur propre tempo" },
   { question: "Comment faire cuire un poisson avec son Eupho ?", answer: "Mettez-le dans le pavillon et jouez Do Ré La Sol" }
 ];
+
 const games = ["https://elgoog.im/dino/","https://musiclab.chromeexperiments.com/","https://www.incredibox.com/demo/"];
+
 const instruments = ["trompette","trombone","clarinette","percu","chef","saxophone","flute"];
 const instrumentDescriptions = {
   trompette: "🎺 Trompette : Toujours plus fort, toujours plus haut. Tu te crois la star du show (et parfois tu l’es). Ton pire ennemi ? Le bouton de volume.",
   trombone: "📎 Trombone : Tu glisses partout, dans la musique comme au bar. Tu es imprévisible, mais c’est ce qui fait ton charme (enfin… parfois).",
-  clarinette: "🎶 Clarinette : Tu bosses sérieusement… mais tu lâches des canards mémorables. Personne ne sait si tu rigoles ou si tu pleures.",
+  clarinette: "🎶 Clarinette : Tu bosses sérieusement… mais tu lâches des canards mémorables. Entre rigueur et fou rire tu es unique.",
   percu: "🥁 Percu : Tu cognes sur tout, tout le temps. Pour toi, une table, un gobelet ou une casserole c’est déjà un instrument. Ton voisin de chambre te déteste.",
   chef: "🧑‍🎤 Chef : Tu n’as pas d’instrument… mais tu as les bras. Et tu penses que ça suffit pour diriger tout ce petit monde (même si personne ne te regarde vraiment).",
   saxophone: "🎷 Saxophone : Tu improvises toujours, même sur ‘Au Clair de la Lune’. Tu crois être irrésistible, mais en vrai on attend juste que tu termines ton solo de 15 minutes.",
   flute: "🎵 Flûte : Tu joues discrètement, presque trop… jusqu’au moment où tu balances un aigu strident qui réveille tout le quartier."
 };
 
-/* Quiz questions */
+/* ===== Quiz questions ===== */
 const quizQuestions = [
   {
-    q: "En répétition, tu es plutôt...",
-    options: [
-      { text: "Je me place devant et j’y vais à fond.", instrument: "trompette" },
-      { text: "J’arrive relax, je plaisante, je détends l’ambiance.", instrument: "trombone" },
-      { text: "Je révise mes doigtés dans mon coin, sérieusement.", instrument: "clarinette" },
-      { text: "Je crée du rythme partout — même sur la table.", instrument: "percu" },
-      { text: "J’organise et je supervise la structure.", instrument: "chef" },
-      { text: "Je cherche le groove et j’improvise.", instrument: "saxophone" },
-      { text: "Je m’échauffe doucement et je me concentre.", instrument: "flute" }
+    q:"En répétition, tu es plutôt...",
+    options:[
+      {text:"Je me place devant et j’y vais à fond.", instrument:"trompette"},
+      {text:"J’arrive relax, je plaisante, je détends l’ambiance.", instrument:"trombone"},
+      {text:"Je révise mes doigtés dans mon coin, sérieusement.", instrument:"clarinette"},
+      {text:"Je crée du rythme partout — même sur la table.", instrument:"percu"},
+      {text:"J’organise et je supervise la structure.", instrument:"chef"},
+      {text:"Je cherche le groove et j’improvise.", instrument:"saxophone"},
+      {text:"Je m’échauffe doucement et je me concentre.", instrument:"flute"}
     ]
   },
   {
-    q: "Ton accessoire indispensable avant de monter sur scène ?",
-    options: [
-      { text: "Un petit rituel pour être au top (style, attitude).", instrument: "trompette" },
-      { text: "Un trait d’humour et une bière - dans cet ordre.", instrument: "trombone" },
-      { text: "Mes partitions annotées, proprement rangées.", instrument: "clarinette" },
-      { text: "Des baguettes (et toujours une de secours).", instrument: "percu" },
-      { text: "Mon planning du set et mon chronomètre.", instrument: "chef" },
-      { text: "Un souffle profond et une posture cool.", instrument: "saxophone" },
-      { text: "Un échauffement discret et un souffle contrôlé.", instrument: "flute" }
+    q:"Ton accessoire indispensable avant de monter sur scène ?",
+    options:[
+      {text:"Un petit rituel pour être au top.", instrument:"trompette"},
+      {text:"Un trait d’humour et une bière.", instrument:"trombone"},
+      {text:"Mes partitions annotées, proprement rangées.", instrument:"clarinette"},
+      {text:"Des baguettes et une de secours.", instrument:"percu"},
+      {text:"Mon planning du set et mon chronomètre.", instrument:"chef"},
+      {text:"Un souffle profond et une posture cool.", instrument:"saxophone"},
+      {text:"Un échauffement discret et un souffle contrôlé.", instrument:"flute"}
     ]
   },
   {
-    q: "Si on te cherche pendant une prestation, tu es probablement...",
-    options: [
-      { text: "Devant en train de chercher le buzz.", instrument: "trompette" },
-      { text: "Au bar à raconter des anecdotes.", instrument: "trombone" },
-      { text: "Dans un coin à corriger un détail technique.", instrument: "clarinette" },
-      { text: "En train de taper un rythme improvisé sur tout.", instrument: "percu" },
-      { text: "En train de coordonner la suite du set.", instrument: "chef" },
-      { text: "En train d’improviser un long solo jazzy.", instrument: "saxophone" },
-      { text: "En train de souffler un peu loin des projecteurs.", instrument: "flute" }
+    q:"Si on te cherche pendant une prestation, tu es probablement...",
+    options:[
+      {text:"Devant en train de chercher le buzz.", instrument:"trompette"},
+      {text:"Au bar à raconter des anecdotes.", instrument:"trombone"},
+      {text:"Dans un coin à corriger un détail technique.", instrument:"clarinette"},
+      {text:"En train de taper un rythme improvisé sur tout.", instrument:"percu"},
+      {text:"En train de coordonner la suite du set.", instrument:"chef"},
+      {text:"En train d’improviser un long solo jazzy.", instrument:"saxophone"},
+      {text:"En train de souffler un peu loin des projecteurs.", instrument:"flute"}
     ]
   },
   {
-    q: "Si tu étais en retard à la répétition, que dirais-tu ?",
-    options: [
-      { text: "Je suis arrivé à l’heure… enfin, presque", instrument: "trompette" },
-      { text: "Désolé, j’ai dû m’arrêter pour rigoler un peu", instrument: "trombone" },
-      { text: "J’ai suivi mes notes à la lettre… mais lentement", instrument: "clarinette" },
-      { text: "J’ai frappé sur tout ce que j’ai trouvé pour rester motivé", instrument: "percu" },
-      { text: "Je vérifie que tout est prêt pour les autres", instrument: "chef" },
-      { text: "J’ai improvisé le chemin pour arriver", instrument: "saxophone" },
-      { text: "Je me suis échauffé tranquillement avant de venir", instrument: "flute" }
+    q:"Si tu étais en retard à la répétition, que dirais-tu ?",
+    options:[
+      {text:"Je suis arrivé à l’heure… enfin, presque", instrument:"trompette"},
+      {text:"Désolé, j’ai dû m’arrêter pour rigoler un peu", instrument:"trombone"},
+      {text:"J’ai suivi mes notes à la lettre… mais lentement", instrument:"clarinette"},
+      {text:"J’ai frappé sur tout ce que j’ai trouvé pour rester motivé", instrument:"percu"},
+      {text:"Je vérifie que tout est prêt pour les autres", instrument:"chef"},
+      {text:"J’ai improvisé le chemin pour arriver", instrument:"saxophone"},
+      {text:"Je me suis échauffé tranquillement avant de venir", instrument:"flute"}
     ]
   },
   {
-    q: "Comment tu te comportes pendant un solo des autres ?",
-    options: [
-      { text: "Je les encourage et je fais un clin d’œil", instrument: "trompette" },
-      { text: "Je commente discrètement et je ris un peu", instrument: "trombone" },
-      { text: "J’observe et note tous les détails", instrument: "clarinette" },
-      { text: "Je tape le rythme avec tout ce que j’ai sous la main", instrument: "percu" },
-      { text: "Je surveille que tout reste bien synchronisé", instrument: "chef" },
-      { text: "Je me lance dans un petit contrepoint improvisé", instrument: "saxophone" },
-      { text: "Je souffle doucement et profite du son", instrument: "flute" }
+    q:"Comment tu te comportes pendant un solo des autres ?",
+    options:[
+      {text:"Je les encourage et je fais un clin d’œil", instrument:"trompette"},
+      {text:"Je commente discrètement et je ris un peu", instrument:"trombone"},
+      {text:"J’observe et note tous les détails", instrument:"clarinette"},
+      {text:"Je tape le rythme avec tout ce que j’ai sous la main", instrument:"percu"},
+      {text:"Je surveille que tout reste bien synchronisé", instrument:"chef"},
+      {text:"Je me lance dans un petit contrepoint improvisé", instrument:"saxophone"},
+      {text:"Je souffle doucement et profite du son", instrument:"flute"}
     ]
   }
 ];
 
 /* ===== Fonctions utilitaires ===== */
 function randomFromArray(a){ return a[Math.floor(Math.random()*a.length)]; }
+function shuffleArray(array){for(let i=array.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]]}return array;}
 
 /* ===== Playlist ===== */
 function loadRandomSong(){
   const index = Math.floor(Math.random()*10);
-  bandaFm.outerHTML = `<iframe id="banda-fm" class="playlist" width="320" height="180" src="https://www.youtube.com/embed/videoseries?list=${playlistId}&index=${index}&autoplay=1" title="Playlist Banda" frameborder="0" allowfullscreen></iframe>`;
-  bandaFm = document.getElementById('banda-fm');
+  bandaFm.outerHTML=`<iframe id="banda-fm" class="playlist" width="320" height="180" src="https://www.youtube.com/embed/videoseries?list=${playlistId}&index=${index}&autoplay=1" title="Playlist Banda" frameborder="0" allowfullscreen></iframe>`;
+  bandaFm=document.getElementById('banda-fm');
 }
 
 /* ===== Mise à jour blagues et retardataires ===== */
-const lateAnswerEl = document.getElementById("late-answer");
-const jokeQuestionEl = document.getElementById("joke-question");
-const jokeAnswerEl = document.getElementById("joke-answer");
+const lateAnswerEl=document.getElementById("late-answer");
+const jokeQuestionEl=document.getElementById("joke-question");
+const jokeAnswerEl=document.getElementById("joke-answer");
 
 function updateContent(){
-  lateAnswerEl.textContent = randomFromArray(lateAnswers);
-  const j = randomFromArray(jokes);
-  jokeQuestionEl.textContent = j.question;
-  jokeAnswerEl.textContent = j.answer;
+  lateAnswerEl.textContent=randomFromArray(lateAnswers);
+  const j=randomFromArray(jokes);
+  jokeQuestionEl.textContent=j.question;
+  jokeAnswerEl.textContent=j.answer;
   loadRandomSong();
 }
 
 /* ===== Quiz ===== */
-const quizModal = document.getElementById('quiz-modal');
-const quizContent = document.getElementById('quiz-content');
-const quizButton = document.getElementById('quiz-button');
-const quizClose = document.getElementById('quiz-close');
+const quizModal=document.getElementById('quiz-modal');
+const quizContent=document.getElementById('quiz-content');
+const quizButton=document.getElementById('quiz-button');
+const quizClose=document.getElementById('quiz-close');
 
 function openQuiz(){
-  let index = 0;
-  const scores = {};
+  let index=0;
+  const scores={};
   instruments.forEach(i=>scores[i]=0);
 
   function showQuestion(){
     if(index>=quizQuestions.length){
-      // résultat
-      let maxInstrument = instruments[0];
-      instruments.forEach(i=>{ if(scores[i]>scores[maxInstrument]) maxInstrument=i });
+      let maxInstrument=instruments[0];
+      instruments.forEach(i=>{if(scores[i]>scores[maxInstrument])maxInstrument=i});
       quizContent.innerHTML=`<div class="quiz-result">${instrumentDescriptions[maxInstrument]}</div>`;
       return;
     }
-    const q = quizQuestions[index];
-    let html = `<div class="quiz-q">${q.q}</div>`;
-    q.options.forEach((opt,i)=>{ html+=`<div class="quiz-opt" data-i="${i}">${opt.text}</div>` });
-    quizContent.innerHTML = html;
+    const q=quizQuestions[index];
+    const optionsShuffled=shuffleArray([...q.options]);
+    let html=`<div class="quiz-q">${q.q}</div>`;
+    optionsShuffled.forEach((opt,i)=>{html+=`<div class="quiz-opt" data-instr="${opt.instrument}">${opt.text}</div>`;});
+    quizContent.innerHTML=html;
     quizContent.querySelectorAll('.quiz-opt').forEach(opt=>{
-      opt.addEventListener('click',e=>{
-        const i = parseInt(opt.dataset.i);
-        const instr = q.options[i].instrument;
+      opt.addEventListener('click',()=>{
+        const instr=opt.dataset.instr;
         scores[instr]++;
         index++;
         showQuestion();

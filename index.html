@@ -86,6 +86,213 @@ const games=[
   "https://musiclab.chromeexperiments.com/"
 ];
 
+/* Ajout des 3 nouveaux instruments */
+const instruments=["trompette","trombone","clarinette","percu","chef","saxophone","flute","souba","cor","eupho"];
+
+const instrumentDescriptions={
+  trompette:"🎺 Trompette : Toujours plus fort, toujours plus haut. Tu te crois la star du show. Ton pire ennemi ? Le bouton de volume.",
+  trombone:"📎 Trombone : Tu glisses partout, dans la musique comme au bar. Tu es imprévisible, mais c’est ce qui fait ton charme (enfin… parfois).",
+  clarinette:"🎶 Clarinette : Tu bosses sérieusement… mais tu lâches des canards mémorables.",
+  percu:"🥁 Percu : Tu cognes sur tout, tout le temps. Une table ou une casserole ? Un instrument potentiel.",
+  chef:"🧑‍🎤 Chef : Tu n’as pas d’instrument… mais tu as les bras. Et tu penses que ça suffit.",
+  saxophone:"🎷 Saxophone : La classe incarnée. Tu improvises même quand on te demande de ne pas improviser.",
+  flute:"🎵 Flûte : Discret… jusqu’au moment où tu lances un aigu tueur.",
+  souba:"📯 Soubassophone : Tu avances lentement, mais avec style. Tu fais trembler le sol et tu arrives en retard… instrument oblige.",
+  cor:"🌀 Cor d'harmonie : Mystérieux, élégant, parfois incompréhensible. Personne ne sait comment ton instrument fonctionne, même toi certains jours.",
+  eupho:"🎺 Euphonium : Doux, chaleureux, sous-coté. Tu joues super bien, mais tout le monde te confond avec un petit tuba."
+};
+
+/* ===== Quiz questions ===== */
+const quizQuestions=[
+{q:"En répétition, tu es plutôt...",options:[
+{text:"Je me place devant et j’y vais à fond.",instrument:"trompette"},
+{text:"J’arrive relax, je plaisante, je détends l’ambiance.",instrument:"trombone"},
+{text:"Je révise mes doigtés dans mon coin, sérieusement.",instrument:"clarinette"},
+{text:"Je crée du rythme partout.",instrument:"percu"},
+{text:"J’organise la structure.",instrument:"chef"},
+{text:"Je cherche le groove.",instrument:"saxophone"},
+{text:"Je m’échauffe doucement.",instrument:"flute"},
+{text:"Je porte tout le monde avec mon gros son.",instrument:"souba"},
+{text:"Je réfléchis intensément… parfois trop.",instrument:"cor"},
+{text:"Je joue tranquillement, personne ne sait ce que je fais mais ça sonne bien.",instrument:"eupho"}
+]},
+{q:"Ton accessoire indispensable avant de monter sur scène ?",options:[
+{text:"Un petit rituel.",instrument:"trompette"},
+{text:"Un trait d’humour et une bière.",instrument:"trombone"},
+{text:"Mes partitions impeccables.",instrument:"clarinette"},
+{text:"Une paire de baguettes.",instrument:"percu"},
+{text:"Le planning du set.",instrument:"chef"},
+{text:"Un souffle profond.",instrument:"saxophone"},
+{text:"Un échauffement discret.",instrument:"flute"},
+{text:"Mon souba – c'est déjà assez lourd.",instrument:"souba"},
+{text:"Une embouchure propre et un soupçon de courage.",instrument:"cor"},
+{text:"Mon euphonium, toujours prêt à chanter.",instrument:"eupho"}
+]},
+{q:"Si on te cherche pendant une prestation, tu es probablement...",options:[
+{text:"Devant à chercher le buzz.",instrument:"trompette"},
+{text:"Au bar à raconter des blagues.",instrument:"trombone"},
+{text:"Dans un coin avec une partition.",instrument:"clarinette"},
+{text:"En train de taper un rythme.",instrument:"percu"},
+{text:"À organiser la suite.",instrument:"chef"},
+{text:"En train d’improviser.",instrument:"saxophone"},
+{text:"À souffler discrètement.",instrument:"flute"},
+{text:"En train d’essayer de bouger sans renverser quelqu’un.",instrument:"souba"},
+{text:"Dans les coulisses, perdu dans mes tuyaux.",instrument:"cor"},
+{text:"Sagement à ma place, personne ne me remarque mais je suis là.",instrument:"eupho"}
+]},
+{q:"Si tu étais en retard à la répétition, que dirais-tu ?",options:[
+{text:"Je suis presque à l’heure.",instrument:"trompette"},
+{text:"J’ai croisé quelqu’un et j’ai rigolé.",instrument:"trombone"},
+{text:"Je pensais être à l’heure… sur ma partition.",instrument:"clarinette"},
+{text:"J’ai tapé le rythme tout du long.",instrument:"percu"},
+{text:"J’ai vérifié que tout était prêt.",instrument:"chef"},
+{text:"J’ai improvisé le chemin.",instrument:"saxophone"},
+{text:"Je me suis échauffé tranquillement.",instrument:"flute"},
+{text:"Mon souba m’a ralenti… comme d’hab.",instrument:"souba"},
+{text:"Je me suis perdu dans les couloirs.",instrument:"cor"},
+{text:"J’étais là… mais personne ne m’a vu.",instrument:"eupho"}
+]},
+{q:"Comment tu te comportes pendant un solo des autres ?",options:[
+{text:"Je les encourage fort.",instrument:"trompette"},
+{text:"Je commente en rigolant.",instrument:"trombone"},
+{text:"J’analyse tout.",instrument:"clarinette"},
+{text:"Je tape le rythme partout.",instrument:"percu"},
+{text:"Je surveille la synchro.",instrument:"chef"},
+{text:"Je contre-improvise.",instrument:"saxophone"},
+{text:"Je souffle doucement en appréciant.",instrument:"flute"},
+{text:"Je fais vibrer le sol en rythme.",instrument:"souba"},
+{text:"J’écoute en me disant que je ne ferai jamais ça.",instrument:"cor"},
+{text:"Je soutiens le solo avec un son rond et discret.",instrument:"eupho"}
+]}
+];
+
+/* ===== Fonctions ===== */
+function randomFromArray(a){ return a[Math.floor(Math.random()*a.length)]; }
+function shuffleArray(array){for(let i=array.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]]}return array;}
+
+function loadRandomSong(){
+  const index=Math.floor(Math.random()*10);
+  bandaFm.outerHTML=`<iframe id="banda-fm" class="playlist" width="320" height="180" src="https://www.youtube.com/embed/videoseries?list=${playlistId}&index=${index}&autoplay=1"></iframe>`;
+  bandaFm=document.getElementById('banda-fm');
+}
+
+const lateAnswerEl=document.getElementById("late-answer");
+const jokeQuestionEl=document.getElementById("joke-question");
+const jokeAnswerEl=document.getElementById("joke-answer");
+
+function updateContent(){
+  lateAnswerEl.textContent=randomFromArray(lateAnswers);
+  const j=randomFromArray(jokes);
+  jokeQuestionEl.textContent=j.question;
+  jokeAnswerEl.textContent=j.answer;
+  loadRandomSong();
+}
+
+/* ===== Quiz ===== */
+const quizModal=document.getElementById('quiz-modal');
+const quizContent=document.getElementById('quiz-content');
+const quizButton=document.getElementById('quiz-button');
+const quizClose=document.getElementById('quiz-close');
+
+function openQuiz(){
+  let index=0;
+  const scores={};
+  instruments.forEach(i=>scores[i]=0);
+
+  function showQuestion(){
+    if(index>=quizQuestions.length){
+      let maxInstrument=instruments[0];
+      instruments.forEach(i=>{if(scores[i]>scores[maxInstrument]) maxInstrument=i});
+      quizContent.innerHTML=`<div class="quiz-result">${instrumentDescriptions[maxInstrument]}</div>`;
+      return;
+    }
+
+    const q=quizQuestions[index];
+    const optionsShuffled=shuffleArray([...q.options]);
+    let html=`<div class="quiz-q">${q.q}</div>`;
+    optionsShuffled.forEach(opt=>{
+      html+=`<div class="quiz-opt" data-instr="${opt.instrument}">${opt.text}</div>`;
+    });
+    quizContent.innerHTML=html;
+
+    quizContent.querySelectorAll('.quiz-opt').forEach(opt=>{
+      opt.addEventListener('click',()=>{
+        scores[opt.dataset.instr]++;
+        index++;
+        showQuestion();
+      });
+    });
+  }
+
+  quizModal.style.display='block';
+  showQuestion();
+}
+
+quizButton.addEventListener('click',openQuiz);
+quizClose.addEventListener('click',()=>quizModal.style.display='none');
+
+/* ===== Autres boutons ===== */
+document.getElementById("back-button").addEventListener("click",()=>window.location.href="https://sites.google.com/bandadesbordsdemarne.com/public/espace-membres/infos-presta");
+document.getElementById("new-joke-button").addEventListener("click",updateContent);
+document.getElementById("play-game-button").addEventListener("click",()=>window.open(randomFromArray(games),"_blank"));
+
+/* ===== Initialisation ===== */
+updateContent();
+</script>
+</body>
+</html>
+
+<div id="joke-container">
+  <div class="question" id="joke-question">Comment un jazz man fait-il pour devenir millionnaire ?</div>
+  <div class="answer" id="joke-answer">il commence milliardaire !</div>
+</div>
+
+<div class="playlist-wrap">
+  <h2 style="color:var(--banda);margin:0 0 10px">📻 La Banda FM</h2>
+  <iframe id="banda-fm" class="playlist" width="320" height="180" src="" title="Playlist Banda" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<div id="buttons-container">
+  <button id="quiz-button">🎭 Quel musicien es-tu ?</button>
+  <button id="back-button">Retour à l’espace musiciens</button>
+  <button id="new-joke-button">Encore une blague</button>
+  <button id="play-game-button">Jouons ensemble</button>
+</div>
+
+<!-- Quiz modal -->
+<div id="quiz-modal" aria-hidden="true">
+  <div class="quiz-box" role="dialog" aria-modal="true" aria-labelledby="quiz-title">
+    <h2 id="quiz-title">🎭 Quel musicien es-tu ?</h2>
+    <div id="quiz-content"></div>
+    <div style="text-align:right;margin-top:14px">
+      <button id="quiz-close">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== Données ===== */
+let bandaFm=document.getElementById('banda-fm');
+const playlistId="PL5rHMtGhoildYgE_vO3rzvD6fIKupivR9";
+
+const lateAnswers=["Céléstine","Théo","Léo","Rémi","Angèle","Garance","Nataél","Léandre","Yoann","le carnet medley","les Lopez","les Ducournau","les Trinquant","La Thomann Family","les Percussion et leur tempo :D ....","Arthur et les inscriptions...","la SNCF"];
+
+const jokes=[
+  {question:"Comment un jazz man fait-il pour devenir millionnaire ?",answer:"il commence milliardaire !"},
+  {question:"Quel est le point commun entre les Beatles et les Percus de la Banda ?",answer:"Cela fait plus de 40 ans qu’ils ne jouent plus ensemble !"},
+  {question:"Qu'est-ce qu'un demie ton en Banda ?",answer:"Deux Flûtes qui jouent à l'unisson <3"},
+  {question:"Le chef en répétition : - Trombone 2 tu joues trop fort !!!",answer:"Les autres : Il n'est pas là .... - Vous lui direz quand il reviendra !"},
+  {question:"Pourquoi les Souba sont toujours en retard ?",answer:"Parce qu’ils suivent leur propre tempo"},
+  {question:"Comment faire cuire un poisson avec son Eupho ?",answer:"Mettez-le dans le pavillon et jouez Do Ré La Sol"}
+];
+
+const games=[
+  "https://www.scriptendo.fr/Piano/lecture.php?j=entr#ancre",
+  "https://elgoog.im/dino/",
+  "https://artsandculture.google.com/experiment/blob-opera/AAHWrq360NcGbw",
+  "https://musiclab.chromeexperiments.com/"
+];
+
 const instruments=["trompette","trombone","clarinette","percu","chef","saxophone","flute"];
 const instrumentDescriptions={
   trompette:"🎺 Trompette : Toujours plus fort, toujours plus haut. Tu te crois la star du show. Ton pire ennemi ? Le bouton de volume.",
